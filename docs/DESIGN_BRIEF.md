@@ -5,6 +5,8 @@ This summarizes the user-provided design handoff for the project. The original r
 ## Confirmed requirements
 
 - Exact title: **The Fred Verse**. Detailed 2D pixel-art RPG, never 3D.
+- Consistently retro presentation, including font, HUD, inventory, item icons and world. Inventory/build choices must be substantial. Avoid the original sparse corporate-dashboard look.
+- Use the user's supplied Fred character art by default. Alpha 0.3 embeds a prepared transparent derivative of the inline 53-pose atlas, with measured frame bounds, rather than pretending the original PNG was retrieved. An original PNG should replace that derivative if supplied. Do not revert the player to the crude block placeholder.
 - Recognizable Hope International University, Fullerton. Every player is a Fred variant. Solo-complete play and LAN co-op are fundamental.
 - Exploration, real-time combat, Nerf / lightsaber / baseball bat weapon families, equipment, upgrades, levels, healing, party support, titles, quests and professor encounters.
 - Professor encounters are original nonlethal fictional challenges; professors are not depicted as evil and remain characters after victory.
@@ -20,7 +22,9 @@ Primary delivery: self-contained browser HTML, Canvas rendering, and one authori
 
 Dorm Fred and MLB Fred; Alpha dorm, map-relative campus, scrolling gym/chapel. Robbie Phillips Three-Point Practice is a provisional introductory encounter. The first chapter ends after remote recovery, practice, a gear upgrade and an early meeting with Big P near the chapel stage. This is a first chapter, not the complete professor progression or final fight. Browser saves are version 2 with validation, export/import and storage-denied fallback. See README.md for exact verification and deployment limitations.
 
-Gear currently uses body, shoes and accessory slots. Royal Arts / Focus terminology, numerical balance, variants, titles and all new dialogue are provisional. Placeholder pixel sprites are not final likenesses. No canon explanation for Fred variants, exact dorm ownership, professor routines or Uzi’s story is established.
+Gear uses head, body, pants, shoes, accessory and backpack slots, with a 24-cell visual bag, comparisons, consumables, idempotent dorm supply pickups and per-item reinforcement. The player's prepared sprite atlas is embedded, while faculty and environmental art remain provisional. The font is embedded Pixelify Sans under SIL OFL. Royal Arts / Focus terminology, numerical balance, variants, titles and new dialogue remain provisional. No canon explanation for Fred variants, exact dorm ownership, professor routines or Uzi’s story is established.
+
+The user also requested Google Maps / Street View research for exterior realism. Google Maps access returned proxy CONNECT 403; required Google domains were saved in the environment network draft. Do not claim those services were inspected until the network update is applied and a real inspection succeeds. In the meantime only the supplied campus map, photos and videos establish geography.
 
 ## Exterior map constraints
 

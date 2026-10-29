@@ -1,6 +1,6 @@
 # The Fred Verse · browser edition
 
-**Download `The-Fred-Verse.html` and open it in a modern desktop browser.** No Python, terminal, npm, account, internet, or external assets are required for solo play. It is a self-contained, roughly 94 KB game. `index.html` is the same build, ready for static hosting.
+**Download `The-Fred-Verse.html` and open it in a modern desktop browser.** No Python, terminal, npm, account, internet, or external assets are required for solo play. It is a self-contained, roughly 2.3 MB game with embedded Fred sprites and pixel typography. `index.html` is the same build, ready for static hosting.
 
 [Download the HTML](https://github.com/m568zz4t2f-ui/Fredverse/raw/refs/heads/main/The-Fred-Verse.html) · [Source ZIP](https://github.com/m568zz4t2f-ui/Fredverse/archive/refs/heads/main.zip)
 
@@ -24,12 +24,13 @@ The repository already has a standalone **`index.html` at its root**. In the rep
 An original 2D pixel-art RPG prototype at an approximate Hope International University in Fullerton. Every playable character is a Fred variant. This is fictional, not an official or endorsed HIU game. Professors are nonlethal practice encounters, not villains.
 
 - **Dorm Fred**: longer Personal Space shield. **MLB Fred**: stronger bat swings, red jersey. Both can use all weapons and finish solo.
+- Inspect the study desk and luggage pile for headphones and a backpack. Pick them up with E and equip them in the inventory. Their Focus recovery bonuses affect gameplay.
 - Find the remote beside the TV in Alpha: walk north, then east. Press **E** nearby. It remains safely at the dorm.
 - Exit the south door. Open **M** to find **E: Darling Pavilion**, north/east of Alpha. Enter its south door, approach the practice marker and press E. Solo starts immediately; all living Freds in the gym must ready for a party encounter.
 - Complete **Robbie Phillips · Three-Point Practice**. Red circles telegraph danger. Move, guard, or dodge. Nerf shoots magazine-fed foam projectiles, saber has quick narrow swings, and the bat has a wider, heavier committed attack. All three work against the practice boss.
-- Earn 90 XP, three practice materials, a Chain of Personal Space, and **An Hour Early**. Return to Alpha, open equipment and upgrade at the workbench. Two Personal Space pieces grant a shield after a successful guard.
+- Earn 90 XP, three practice materials, a Chain of Personal Space, and **An Hour Early**. Return to Alpha, open the inventory and reinforce a selected weapon or armor piece at the workbench. Each item has its own tier: weapons gain 3 attack power and armor 1 defense per tier, up to +5. Two Personal Space pieces grant a shield after a successful guard.
 - Visit **B: Pacific Auditorium / Grana Chapel** and interact to meet **Big P — The President**. With the practice and upgrade done, finish chapter one: earn 35 XP and **Prepared for Convocation**. This is fictional dialogue. Paul Alexander's culminating boss is reserved for later story progression, not trivialized here.
-- Repeat the practice with another build or friends. A first quest/chapter/title unlock cannot award twice; newly started repeat practices intentionally award more XP/materials.
+- Repeat the practice with another build or friends. The bag has item icons, rarity frames, stacks, six armor slots, an equipped character portrait and comparisons against current gear. A first quest/chapter/title unlock cannot award twice; newly started repeat practices intentionally award more XP/materials.
 
 ## Controls
 
@@ -38,7 +39,8 @@ An original 2D pixel-art RPG prototype at an approximate Hope International Univ
 | WASD / arrows | Move |
 | Mouse | Aim; keyboard-only aim follows movement until mouse use |
 | Left click / hold J | Attack |
-| Right click / hold K | Guard |
+| Right click | Click-to-walk with collision-aware pathfinding |
+| Hold K / touch Guard | Guard |
 | Space | Dodge: 12 Focus, brief invulnerability |
 | Q | Personal Space: 25 Focus, area attack, nearby allied shield/Focus |
 | H | Emergency Chips: heal 38; three supplies per rest |
@@ -46,9 +48,10 @@ An original 2D pixel-art RPG prototype at an approximate Hope International Univ
 | 1 / 2 / 3 | Nerf / saber / bat |
 | E | Interact, enter/exit, rest, ready |
 | Hold E near a downed Fred while stationary | Revive over 2.5 seconds; movement, attack, distance or damage interrupts |
-| I / M / Escape | Equipment / campus map / menu |
+| I / B / Tab | Toggle inventory |
+| M / Escape | Campus map / menu |
 
-Touch controls include movement, attack/guard/interact, reload, weapon switching, equipment and abilities without scrolling to the sidebar. Touch aim follows the directional pad. No controller support yet. Menu settings adjust pixel scale and camera smoothing. Solo pauses in menus or when hidden; a multiplayer host keeps running while menus are open. Background tab throttling can slow co-op: keep the host in the foreground.
+Touch controls include movement, attack/guard/interact, reload, weapon switching, the six-slot equipment screen and abilities without scrolling to the sidebar. Touch aim follows the directional pad. No controller support yet. Menu settings adjust pixel scale and camera smoothing. Solo pauses in menus or when hidden; a multiplayer host keeps running while menus are open. Background tab throttling can slow co-op: keep the host in the foreground.
 
 ## Saves
 
@@ -80,7 +83,10 @@ With Python 3.12+ installed, `python server.py --open` (or `PLAY_WINDOWS.bat`) o
 
 - `web/core.js`: one authoritative JavaScript simulation, used solo and by the browser host.
 - `web/session.js`: local saves, validation, WebRTC invite/reply and network transport.
-- `web/game.js`, `web/style.css`, `web/index.html`: renderer, art and UI.
+- `web/art.js`: original pixel item icons and floor materials.
+- `web/game.js`, `web/style.css`, `web/index.html`: renderer, retro HUD, inventory, and UI.
+- `web/assets/fred-atlas-prepared.png`, `fred-atlas.json`: embedded 53-pose prepared Fred sprite atlas and measured frame metadata.
+- `web/assets/fonts/`: embedded Pixelify Sans font and its SIL OFL license.
 - `build.py`: developer-only dependency-free HTML packager. Players never run this.
 - `The-Fred-Verse.html`, `index.html`: generated self-contained builds checked into GitHub.
 - `server.py`, `test_game.py`, `web/legacy/`: optional prior Python HTTP prototype.
@@ -95,7 +101,7 @@ python test_browser.py --rtc-only
 python -m unittest -v
 ```
 
-Run `python build.py` after editing browser sources. It embeds all CSS and three classic scripts with no module imports or runtime file fetches. On a development machine, any static HTTP server can serve the root `index.html`; no `/api` routes are used by the new game.
+Run `python build.py` after editing browser sources. It embeds all CSS, four classic scripts, the Fred atlas, the pixel font and its license with no module imports or runtime file fetches. On a development machine, any static HTTP server can serve the root `index.html`; no `/api` routes are used by the new game.
 
 ### Verification outcomes
 
@@ -108,10 +114,10 @@ Run `python build.py` after editing browser sources. It embeds all CSS and three
 
 ## References and remaining work
 
-`docs/DESIGN_BRIEF.md` summarizes confirmed requirements. The original handoff/reference media remain in private session attachments. Videos `IMG_1885.MOV` and `IMG_1880.MOV`, dorm photo `IMG_6258.HEIC`, and likeness photo `IMG_9166 2.HEIC` were inspected; a campus map, campus photographs and sprite atlas are visible in chat. Historical PDF/atlas files listed in the original brief are not in the checkout. Inline images do not have a usable local file binding here. No watermarked photos were redistributed as game textures.
+`docs/DESIGN_BRIEF.md` summarizes confirmed requirements. The original handoff/reference media remain in private session attachments. Videos `IMG_1885.MOV` and `IMG_1880.MOV`, dorm photo `IMG_6258.HEIC`, and likeness photo `IMG_9166 2.HEIC` were inspected; a campus map, campus photographs and sprite atlas are visible in chat. Historical PDF/atlas files listed in the original brief are not in the checkout. Inline images do not have a usable local file binding here. No watermarked photos were redistributed as game textures. Google Maps/Street View access was attempted but blocked by proxy CONNECT 403; Google domain additions were saved in the environment draft. Apply those network changes in environment settings before research can continue. The current map is still based on the supplied references, not an asserted Maps/Street View inspection.
 
-Campus/furniture/Fred/professor art is original **provisional procedural pixel art**, not final detailed likenesses. The Sprite preview still requires an actual PNG/WebP atlas, assumes the earlier sheet's directional layout, is local/session-only, and does not establish verified slicing, multiplayer art replication or final action-frame integration. Final art requires the source asset and frame inspection.
+The **default player character now uses the supplied Fred design** through an embedded prepared transparent derivative of the inline sprite sheet. Its 53 frames were measured and connected to directional idle/walk, strike, and downed states; it also drives the equipment portrait. The original downloadable PNG was unavailable, so this is not claimed pixel-identical to that original. See `docs/ART_PROVENANCE.md`. Optional local replacement previews are session-only. Faculty and environment art remain provisional. Complete wearable/action artwork is still unfinished.
 
 Exterior placement follows the supplied map: residences/pool lower-left, academics upper-right, Pavilion/Student Center lower-right, Nutwood north. Angular roofs/glass and room details reference the supplied images. Footprints/interiors are approximate, not real floorplans. Alpha, gym and chapel are enterable scrolling spaces; other interiors are deferred. No real room ownership, professor routine, sacred combat system, Uzi origin or multiverse theology is asserted.
 
-Still unfinished: final detailed art and animation; verified interiors/additional floors; more quests/faculty and the full Paul Alexander progression; weapon variants, broader mastery/crafting, full six-slot armor, storage/trading/transmog/build presets; character export/recovery; controller support; real-device LAN/phone validation; optional easy room-code infrastructure. The first chapter is playable; the full RPG catalog is not claimed complete.
+Still unfinished: final detailed art and animation; verified interiors/additional floors; more quests/faculty and the full Paul Alexander progression; weapon variants, broader mastery/crafting, expanded armor sets, storage/trading/transmog/build presets; character export/recovery; controller support; real-device LAN/phone validation; optional easy room-code infrastructure. The first chapter is playable; the full RPG catalog is not claimed complete.

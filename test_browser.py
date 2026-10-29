@@ -32,6 +32,13 @@ def run():
             page.locator('#join-form button[type=submit]').click()
             page.wait_for_function('state && state.self.name === "Fred"')
             assert page.locator('#connection').inner_text()=='OFFLINE SOLO'
+            page.wait_for_function('document.fonts.check(\'16px "Fred Pixel"\')')
+            page.wait_for_function('atlas && atlasFrames && atlasFrames.length===6')
+            assert page.evaluate('atlasFrames.reduce((n,row)=>n+row.length,0)')==53
+            page.screenshot(path='/tmp/fredverse-rpg-world.png')
+            click=page.evaluate('''()=>{const p=state.self,r=canvas.getBoundingClientRect(),[w,h]=sizes[p.zone],cx=Math.round(Math.max(0,Math.min(w-canvas.width,camera.x))),cy=Math.round(Math.max(0,Math.min(h-canvas.height,camera.y)));return {x:(p.x-cx+65)*r.width/canvas.width+r.left,y:(p.y-cy)*r.height/canvas.height+r.top};}''')
+            before=page.evaluate('state.self.x');page.mouse.click(click['x'],click['y'],button='right');page.wait_for_timeout(650)
+            assert page.evaluate('state.self.x')>before+30,'Right-click pathfinding must actually move the player'
             start=page.evaluate('state.self.x')
             page.keyboard.down('d');page.wait_for_timeout(400);page.keyboard.up('d');page.wait_for_timeout(150)
             assert page.evaluate('state.self.x')>start+30
@@ -40,6 +47,9 @@ def run():
             assert abs(page.evaluate('session.world.clock')-before)<.08,'Solo menus must pause simulation'
             page.get_by_role('button',name='Equip',exact=True).click();page.wait_for_timeout(150)
             assert page.evaluate('state.self.equipped.body')=='jersey'
+            assert page.locator('.bag-item').count()==24
+            assert page.locator('.equip-slot').count()==6
+            page.screenshot(path='/tmp/fredverse-rpg-inventory.png')
             page.locator('#inventory [data-close]').click()
             # Use the same UI input state as the keyboard, with real-time ticks and collision.
             page.evaluate('''window.walkTo=async(x,y)=>{const end=performance.now()+12000;while(performance.now()<end){const p=state.self;if(Math.hypot(p.x-x,p.y-y)<9){keys.clear();return;}keys.clear();if(p.x<x-5)keys.add('d');if(p.x>x+5)keys.add('a');if(p.y<y-5)keys.add('s');if(p.y>y+5)keys.add('w');await new Promise(r=>setTimeout(r,35));}throw Error('Walking blocked to '+x+','+y+' at '+state.self.x+','+state.self.y);};void 0;''')

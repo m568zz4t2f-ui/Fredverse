@@ -10,15 +10,46 @@ const buildings = [
 ];
 const sizes = {campus:[1920,1920], alpha:[880,660], gym:[1360,1000], chapel:[1140,1100]};
 const zoneNames = {campus:'Hope International University', alpha:'Alpha Residence Hall', gym:'Darling Pavilion', chapel:'Pacific Auditorium'};
-const gear = {
-  hoodie:['Personal Space Hoodie','body',3,0,'Personal Space'], jersey:['MLB Prospect Jersey','body',1,4,'Royal Athletics'],
-  shoes:['Black Air Forces','shoes',2,0,'Personal Space'], chain:['Chain of Personal Space','accessory',2,0,'Personal Space'],
+const catalog={
+  nerf:{name:"Owen’s Sidearm",type:'weapon',slot:'weapon',rarity:'uncommon',description:'A borrowed foam-dart sidearm. Accurate ranged shots, eight darts per magazine. Reload between openings.'},
+  saber:{name:"Owen’s Blue Blade",type:'weapon',slot:'weapon',rarity:'uncommon',description:'Quick, close-range saber strikes. A narrow arc rewards facing the right way.'},
+  bat:{name:'MLB Prospect',type:'weapon',slot:'weapon',rarity:'uncommon',description:'For the career that could have been. A committed swing with wide reach and heavy impact.'},
+  hoodie:{name:'Personal Space Hoodie',type:'armor',slot:'body',rarity:'common',description:'Soft inside. Firm boundaries outside. Part of Fred’s Personal Space set.'},
+  jersey:{name:'MLB Prospect Jersey',type:'armor',slot:'body',rarity:'uncommon',description:'A red baseball jersey for an ambitious swing. Trades some defense for extra attack power.'},
+  jeans:{name:'Skinny Black Jeans',type:'armor',slot:'pants',rarity:'common',description:'The standard Fred silhouette. Part of the Personal Space set.'},
+  shoes:{name:'Black Air Forces',type:'armor',slot:'shoes',rarity:'common',description:'Recognizable black sneakers. Built for another lap around campus. Personal Space set.'},
+  chain:{name:'Chain of Personal Space',type:'armor',slot:'accessory',rarity:'rare',description:'Earned through Three-Point Practice. A dark chain with a little extra protection. Personal Space set.'},
+  headphones:{name:'Five-Hour Study Session',type:'armor',slot:'head',rarity:'uncommon',description:'Study headphones recovered from the desk. Gain 2 extra Focus each second while equipped.'},
+  backpack:{name:'The Semester Hauler',type:'armor',slot:'backpack',rarity:'uncommon',description:'A dorm supply pack from the luggage pile. A little protection and +1 Focus recovery per second.'},
+  chips:{name:'Emergency Chip Stash',type:'supply',slot:'consumable',rarity:'common',description:'Restore 38 health. Rest at Alpha to refill three servings. You can also use H in the field.'},
+  materials:{name:'Practice Materials',type:'supply',slot:'material',rarity:'uncommon',description:'Earned by completing faculty practice. Spend three at Alpha to reinforce the selected weapon or armor piece.'},
+  remote:{name:'The Forbidden Remote',type:'supply',slot:'quest item',rarity:'rare',description:'Recovered and left safely at Alpha. This journal record is proof of preparation, not permission to borrow Fred’s TV.'},
 };
+let selectedItem='jersey',bagFilter='all',pendingTarget=null,pointerPosition=null;
 const weaponNames = {nerf:"Owen’s Sidearm", saber:"Owen’s Blue Blade", bat:'MLB Prospect'};
 let token = '', storageOK = session.storageOK;
-let state = null, keys = new Set(), attack = false, block = false, aim = -Math.PI/2;
+let state = null, keys = new Set(), attack = false, block = false, aim = Math.PI/2;
 let pointerAim = false, camera = {x:0,y:0}, visual = new Map(), lastZone = '', notice = '', noticeUntil = 0;
 let atlas = null, busy = false, lastFrame = performance.now();
+let atlasFrames=null;
+const frameCache=new Map();
+function frameImage(row,col,body){
+  if(!atlasFrames)return null;
+  const key=row+':'+col+':'+body;if(frameCache.has(key))return frameCache.get(key);
+  const [x,y,w,h]=atlasFrames[row][col],image=document.createElement('canvas');image.width=w;image.height=h;
+  const c=image.getContext('2d');c.drawImage(atlas,x,y,w,h,0,0,w,h);
+  if(body==='jersey'&&row<5){
+    const pixels=c.getImageData(0,0,w,h),data=pixels.data;
+    // Render a jersey material over dark shirt pixels, keeping the supplied face/hair and shading.
+    for(let yy=Math.floor(h*.35);yy<h*.67;yy++)for(let xx=Math.floor(w*.12);xx<w*.88;xx++){
+      const i=(yy*w+xx)*4,r=data[i],g=data[i+1],b=data[i+2];
+      if(data[i+3]>0&&Math.max(r,g,b)<105&&Math.max(r,g,b)-Math.min(r,g,b)<26){data[i]=Math.min(220,r*1.65+48);data[i+1]=g*.7+9;data[i+2]=b*.75+12;}
+    }
+    c.putImageData(pixels,0,0);
+  }
+  frameCache.set(key,image);return image;
+}
+if(globalThis.FRED_ATLAS_SOURCE){const image=new Image();image.onload=()=>{atlas=image;atlasFrames=globalThis.FRED_ATLAS_SOURCE.frames;};image.src=globalThis.FRED_ATLAS_SOURCE.image;}
 let pixelScale=2,smoothCamera=true;
 let activeDialog = () => document.querySelector('dialog[open]');
 const actions = [];
@@ -26,7 +57,7 @@ const staticScenes = new Map();
 const distance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
 function rect(c,x,y,w,h,color) { c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h)); }
 function polygon(c,points,color) { c.fillStyle=color;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill(); }
-function text(c,value,x,y,size=10,color='#e6dec3',align='left') {c.fillStyle=color;c.font=`${size}px monospace`;c.textAlign=align;c.fillText(value,Math.round(x),Math.round(y));}
+function text(c,value,x,y,size=10,color='#e6dec3',align='left') {c.fillStyle=color;c.font=`${size+1}px "Fred Pixel",monospace`;c.textAlign=align;c.fillText(value,Math.round(x),Math.round(y));}
 function rng(seed) { return () => {seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}; }
 function line(c,x,y,x2,y2,color,width=1) { c.strokeStyle=color;c.lineWidth=width;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke(); }
 function tree(c,x,y,palm=false) {
@@ -70,10 +101,7 @@ function building(c,b) {
   text(c,name,doorX,y+h+48,10,'#22392f','center');
 }
 function roomBase(c,w,h,color) {
-  rect(c,0,0,w,h,color);
-  const random=rng(84);
-  for(let i=0;i<w*h/60;i++){const x=random()*w,y=random()*h;rect(c,x,y,2,1,random()>.5?'#b2a48b':'#9b8d75');}
-  rect(c,0,0,w,35,'#d9d4bf');rect(c,0,35,w,6,'#8c8d7d');rect(c,0,0,15,h,'#d4d0bc');rect(c,w-15,0,15,h,'#acae9c');rect(c,0,h-15,w,15,'#c1bca7');
+  FredArt.floor(c,w,h,w===880?'alpha':'interior');
   rect(c,w/2-32,h-22,64,22,'#3d5558');rect(c,w/2-27,h-17,54,17,'#617d78');text(c,'CAMPUS ↓',w/2,h-35,10,'#f0e3bc','center');
 }
 function bunk(c,x,y){
@@ -82,6 +110,10 @@ function bunk(c,x,y){
   rect(c,x+24,y+15,123,28,'#f1e9d5');rect(c,x+8,y+177,160,10,'#c99b5d');
   for(const xx of [x,x+167]){rect(c,xx,y-8,8,205,'#c39658');rect(c,xx+2,y-8,2,204,'#e2b46e');}
   rect(c,x+139,y+35,6,150,'#cca15f');rect(c,x+160,y+35,6,150,'#cca15f');for(let yy=y+44;yy<y+177;yy+=23)rect(c,x+139,yy,27,5,'#dbb57a');
+  rect(c,x+8,y+9,157,3,'#a99b8b');rect(c,x+24,y+17,120,2,'#fff1d0');rect(c,x+27,y+37,115,3,'#b7ab99');
+  for(let yy=y+51;yy<y+160;yy+=18)for(let xx=x+21;xx<x+136;xx+=20){rect(c,xx,yy,12,8,'#586d81');rect(c,xx+1,yy+1,10,1,'#718298');}
+  for(let xx=x+12;xx<x+164;xx+=19){rect(c,xx,y+179,1,6,'#a3774f');rect(c,xx+2,y+180,8,1,'#e1b576');}
+  rect(c,x+3,y+194,174,7,'#4b414a66');rect(c,x+140,y+39,2,146,'#efd3a0');
 }
 function scene(zone){
   if(staticScenes.has(zone))return staticScenes.get(zone);
@@ -158,15 +190,20 @@ function scene(zone){
 }
 function fred(c,p,x,y,time=0,walking=false,scale=1){
   c.save();c.translate(Math.round(x),Math.round(y));c.scale(scale,scale);
-  if(p.hp<=0)c.rotate(-Math.PI/2);
+  if(p.hp<=0&&!atlas)c.rotate(-Math.PI/2);
   const bob=walking?Math.round(Math.sin(time*13)):0, stride=walking?Math.round(Math.sin(time*13)*3):0;
   rect(c,-12,-2,25,6,'#233c344d');
-  if(atlas){
-    const fw=atlas.width/10,fh=fw*1.0625;
-    const a=(p.angle+Math.PI*2)%(Math.PI*2),row=a>Math.PI*.25&&a<Math.PI*.75?0:a>Math.PI*.75&&a<Math.PI*1.25?2:a>Math.PI*1.25&&a<Math.PI*1.75?4:2;
-    c.save();if(Math.cos(a)<0)c.scale(-1,1);c.drawImage(atlas,(walking?Math.floor(time*10)%8:0)*fw,row*fh,fw,fh,-20,-47,40,47);c.restore();
+  if(atlas&&!p.isFaculty){
+    const dx=Math.cos(p.angle),dy=Math.sin(p.angle),row=p.hp<=0?5:dy>.65?(Math.abs(dx)>.4?1:0):dy<-.65?(Math.abs(dx)>.4?3:4):2;
+    const col=p.hp<=0?1:p.swing>0?8:walking?2+Math.floor(time*10)%6:0;
+    c.save();if(dx<-.1)c.scale(-1,1);
+    if(atlasFrames){const image=frameImage(row,col,p.equipped?.body),height=p.hp<=0?32:64,width=image.width/image.height*height;c.drawImage(image,-width/2,-height,width,height);}
+    else{const fw=atlas.width/10,fh=fw*1.0625;c.drawImage(atlas,col*fw,row*fh,fw,fh,-23,-64,46,64);}
+    if(p.equipped?.head==='headphones'&&p.hp>0){rect(c,-12,-53,3,8,'#8e9bb7');rect(c,9,-53,3,8,'#8e9bb7');}
+    c.restore();
   }else{
     // Provisional original pixel likeness: glasses, slim silhouette, stubble, dark chain.
+    if(p.equipped?.backpack){rect(c,-13,-31,26,21,'#998057');rect(c,-12,-28,24,15,'#bc9c67');}
     rect(c,-8,-16,7,14+stride,'#202e32');rect(c,2,-16,7,14-stride,'#29363a');
     rect(c,-10,-4+stride,10,5,'#16282b');rect(c,1,-4-stride,11,5,'#16282b');rect(c,-9,-1+stride,8,1,'#84928a');rect(c,2,-1-stride,9,1,'#84928a');
     const shirt=p.equipped?.body==='jersey'?'#a64f43':'#273238';
@@ -179,6 +216,7 @@ function fred(c,p,x,y,time=0,walking=false,scale=1){
     rect(c,-8,-42+bob,7,5,'#243437');rect(c,1,-42+bob,7,5,'#243437');rect(c,-1,-41+bob,3,1,'#243437');rect(c,-6,-41+bob,3,2,'#aec0b3');rect(c,3,-41+bob,3,2,'#aec0b3');
     rect(c,-4,-33+bob,9,2,'#786251');rect(c,-2,-35+bob,4,1,'#9b7359');rect(c,0,-38+bob,2,2,'#b0805f');
     if(p.equipped?.accessory==='chain'){rect(c,-5,-29+bob,1,6,'#a8b3a0');rect(c,4,-29+bob,1,6,'#a8b3a0');rect(c,-4,-23+bob,8,2,'#a8b3a0');}
+    if(p.equipped?.head==='headphones'){rect(c,-10,-47+bob,20,2,'#9ea9bb');rect(c,-11,-44+bob,3,9,'#546a8b');rect(c,8,-44+bob,3,9,'#546a8b');}
   }
   if(p.hp<=0){rect(c,-18,-10,36,9,'#9a7b61');text(c,'Z z',0,-26,9,'#e5d7ae','center');}
   else{
@@ -200,11 +238,15 @@ function paint(now){
   const cx=Math.round(Math.max(0,Math.min(w-canvas.width,camera.x))),cy=Math.round(Math.max(0,Math.min(h-canvas.height,camera.y)));
   ctx.clearRect(0,0,canvas.width,canvas.height);ctx.save();ctx.translate(-cx,-cy);ctx.drawImage(scene(zone),0,0);
   const time=state?.clock||now/1000;
+  if(pointerAim&&pointerPosition&&state){const r=canvas.getBoundingClientRect();aim=Math.atan2((pointerPosition.y-r.top)/r.height*canvas.height+cy-p.y,(pointerPosition.x-r.left)/r.width*canvas.width+cx-p.x);}
+  for(const loot of FredCore.LOOT)if(loot.zone===zone&&state&&!p.claimed.includes(loot.id)){
+    rect(ctx,loot.x-14,loot.y-18,28,25,'#191e2b77');FredArt.icon(ctx,loot.item,loot.x-14,loot.y-30,28);text(ctx,'!',loot.x,loot.y-36,13,'#f6d894','center');
+  }
   if(zone==='gym'&&!state?.boss){
     rect(ctx,662,275,36,36,'#314f5b');text(ctx,'E',680,300,19,'#e3c77e','center');
-    fred(ctx,{equipped:{body:'hoodie'},weapon:'bat',angle:Math.PI/2,hp:100},680,300,time,false,1.2);
+    fred(ctx,{isFaculty:true,equipped:{body:'hoodie'},weapon:'bat',angle:Math.PI/2,hp:100},680,300,time,false,1.2);
   }
-  if(zone==='chapel'){fred(ctx,{equipped:{body:'hoodie'},weapon:'',angle:Math.PI/2,hp:100},570,225,time,false,1.2);text(ctx,'BIG P — THE PRESIDENT',570,174,10,'#ece0bd','center');}
+  if(zone==='chapel'){fred(ctx,{isFaculty:true,equipped:{body:'hoodie'},weapon:'',angle:Math.PI/2,hp:100},570,225,time,false,1.2);text(ctx,'BIG P — THE PRESIDENT',570,174,10,'#ece0bd','center');}
   if(zone==='alpha'&&(!state||p.quest===0)){rect(ctx,697,210,18,32,'#ead19d55');text(ctx,'!',706,200,14,'#f1d28e','center');}
   const boss=state?.boss;
   if(boss&&zone==='gym'){
@@ -212,7 +254,7 @@ function paint(now){
       ctx.strokeStyle=mark.fired?'#f1ac79':'#c26b54';ctx.lineWidth=mark.fired?5:2;ctx.fillStyle=mark.fired?'#df8f6466':'#a9554433';ctx.beginPath();ctx.arc(mark.x,mark.y,mark.r,0,Math.PI*2);ctx.fill();ctx.stroke();
       line(ctx,mark.x-8,mark.y,mark.x+8,mark.y,'#d59676');line(ctx,mark.x,mark.y-8,mark.x,mark.y+8,'#d59676');text(ctx,mark.fired?'!':Math.max(0,mark.time).toFixed(1),mark.x,mark.y-15,10,'#ffe2ba','center');
     }
-    fred(ctx,{hp:100,weapon:'',angle:Math.PI/2,equipped:{body:'jersey'}},boss.x,boss.y,time,false,1.4);text(ctx,'ROBBIE PHILLIPS',boss.x,boss.y-78,11,'#f7e1b3','center');
+    fred(ctx,{isFaculty:true,hp:100,weapon:'',angle:Math.PI/2,equipped:{body:'jersey'}},boss.x,boss.y,time,false,1.4);text(ctx,'ROBBIE PHILLIPS',boss.x,boss.y-78,11,'#f7e1b3','center');
   }
   for(const e of state?.effects||[])if(e.zone===zone){ctx.strokeStyle=e.kind==='heal'?'#e3d19b':'#a3d9bc';ctx.lineWidth=3;ctx.fillStyle='#6bbca626';ctx.beginPath();ctx.arc(e.x,e.y,e.r*(1-Math.min(e.ttl,.7)*.4),0,Math.PI*2);ctx.fill();ctx.stroke();}
   for(const q of [...(state?.players||[])].filter(q=>q.zone===zone).sort((a,b)=>a.y-b.y)){
@@ -220,7 +262,7 @@ function paint(now){
     v.x+=(q.x-v.x)*Math.min(1,dt*16);v.y+=(q.y-v.y)*Math.min(1,dt*16);visual.set(q.id,v);
     if(q.shield>0){ctx.strokeStyle='#8ed3bb';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(v.x,v.y-19,23,35,0,0,Math.PI*2);ctx.stroke();}
     if(q.invuln<=0||Math.floor(now/60)%2)fred(ctx,q,v.x,v.y,time,walking);
-    rect(ctx,v.x-18,v.y-65,36,3,'#31483e');rect(ctx,v.x-18,v.y-65,36*q.hp/100,3,'#95c3a1');text(ctx,q.name,v.x,v.y-71,9,'#f5ecd1','center');
+    rect(ctx,v.x-18,v.y-74,36,3,'#31483e');rect(ctx,v.x-18,v.y-74,36*q.hp/100,3,'#95c3a1');text(ctx,q.name,v.x,v.y-80,9,'#f5ecd1','center');
     if(q.revive>0)text(ctx,`REVIVE ${q.revive.toFixed(1)}/2.5`,v.x,v.y+15,9,'#e0c57d','center');
   }
   for(const d of state?.projectiles||[])if(d.zone===zone){rect(ctx,d.x-3,d.y-2,7,3,'#f4d38c');rect(ctx,d.x-1,d.y-1,3,1,'#87c0bd');}
@@ -234,7 +276,9 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('di
 document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d&&d.id!=='welcome'){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
 document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>queue(b.dataset.action));
 document.querySelectorAll('[data-weapon]').forEach(b=>b.onclick=()=>queue('weapon',b.dataset.weapon));
-$('recover').onclick=()=>queue('recover');$('upgrade').onclick=()=>queue('upgrade');$('title-select').onchange=e=>queue('title',e.target.value);
+$('recover').onclick=()=>queue('recover');$('upgrade').onclick=()=>queue('upgrade',selectedItem);$('title-select').onchange=e=>queue('title',e.target.value);
+$('item-equip').onclick=()=>{const item=catalog[selectedItem];if(item.type==='weapon')queue('weapon',selectedItem);else if(item.type==='armor')queue('equip',selectedItem);else if(selectedItem==='chips')queue('heal');};
+document.querySelectorAll('[data-bag-filter]').forEach(b=>b.onclick=()=>{bagFilter=b.dataset.bagFilter;renderInventory();});
 function queue(action,value){if(state&&actions.length<8){actions.push({action,value});send();}}
 async function request(path,body){
   if(path==='/api/input'){session.input(body);return {ok:true};}
@@ -253,7 +297,8 @@ async function send(){
   if(!state||busy)return;busy=true;
   const modal=activeDialog(), action=actions.shift();
   try{
-    await request('/api/input',{keys:modal?[]:[...keys],attack:!modal&&attack,block:!modal&&block,angle:aim,...action});
+    const target=pendingTarget;pendingTarget=null;
+    await request('/api/input',{keys:modal?[]:[...keys],attack:!modal&&attack,block:!modal&&block,angle:aim,...(target?{target}:{}),...action});
     state=await request('/api/state');renderHUD();
     $('connection').textContent=session.status;$('status-light').style.background='#73b6a5';
   }catch(error){
@@ -264,6 +309,7 @@ async function send(){
 setInterval(send,80);
 function promptFor(p){
   if(p.hp<=0)return '';
+  const loot=FredCore.LOOT.find(l=>l.zone===p.zone&&!p.claimed.includes(l.id)&&distance(l,p)<65);if(loot)return 'Pick up '+loot.name;
   if(p.zone==='campus'){
     const b=buildings.find(b=>distance(p,{x:b[2]+b[4]/2,y:b[3]+b[5]+35})<100);
     return b?`${['alpha','gym','chapel'].includes(b[0])?'Enter':'Inspect'} ${b[1]}`:'';
@@ -296,22 +342,51 @@ function renderHUD(){
   $('downed').hidden=p.hp>0;$('recover').disabled=!!boss;$('downed-note').textContent=boss?'Hold on—a teammate can hold E nearby to revive you. All Freds down resets the practice.':'Practice reset. Return to Alpha with your equipment intact.';
   if(p.notice!==notice&&p.notice!==$('speech').dataset.last){notice=p.notice;$('speech').textContent=notice;$('speech').dataset.last=notice;noticeUntil=performance.now()+10000;}
   storageOK=session.storageOK;$('save-status').textContent=session.role==='guest'?'SAVED BY HOST':!storageOK?'MEMORY ONLY · EXPORT YOUR SAVE':state.save_error?'SAVE ERROR · EXPORT BACKUP':'SAVED IN THIS BROWSER';
-  const portrait=$('portrait').getContext('2d');portrait.clearRect(0,0,48,64);portrait.imageSmoothingEnabled=false;fred(portrait,p,24,59,0,false,1);
+  const portrait=$('portrait').getContext('2d');portrait.clearRect(0,0,48,64);portrait.imageSmoothingEnabled=false;fred(portrait,{...p,angle:Math.PI/2,swing:0},24,60,0,false,.88);
   if($('inventory').open)renderInventory();if($('campus-map').open)renderMap();
 }
 function renderInventory(){
   if(!state)return;const p=state.self;
-  $('gear-stats').textContent=`Defense ${p.stats.defense} · Power +${p.stats.power} · Upgrade tier ${p.upgrade}/5`;
-  $('materials').textContent=`${p.materials} practice materials. Upgrade at the Alpha workbench.`;
-  $('upgrade').disabled=p.materials<3||p.upgrade>=5||p.zone!=='alpha';
-  const ids=p.gear.join(',')+JSON.stringify(p.equipped);
+  const items=['nerf','saber','bat',...p.gear,'chips','materials',...(p.quest?['remote']:[])],equipped=id=>p.weapon===id||Object.values(p.equipped).includes(id);
+  if(!items.includes(selectedItem))selectedItem=items[0];
+  $('equipment-name').textContent=p.name;$('equipment-variant').textContent=p.variant.toUpperCase();$('bag-capacity').textContent=items.length+' / 24';
+  $('materials').textContent=p.materials+' practice materials · '+p.chips+' chip servings';
+  const row=(label,value,cls='stat-row')=>{const d=document.createElement('div');d.className=cls;const l=document.createElement('span'),v=document.createElement('b');l.textContent=label;v.textContent=value;d.append(l,v);return d;};
+  $('gear-stats').replaceChildren(row('Attack power','+'+p.stats.power),row('Defense',p.stats.defense),row('Focus recovery',p.stats.focus_regen+'/sec'));
+  $('set-bonus').textContent=p.stats.set?'PERSONAL SPACE · SET ACTIVE — Guard a hit to gain a brief shield.':'PERSONAL SPACE · Equip 2 pieces to unlock a guard shield.';
+  const doll=$('equipment-character').getContext('2d');doll.clearRect(0,0,200,240);doll.imageSmoothingEnabled=false;fred(doll,{...p,angle:Math.PI/2,hp:100,swing:0},100,215,0,false,3);
+  const ids=JSON.stringify([items,p.equipped,p.weapon,p.enhancements,p.chips,p.materials,selectedItem,bagFilter]);
   if($('gear-list').dataset.items!==ids){
     $('gear-list').dataset.items=ids;
-    $('gear-list').replaceChildren(...p.gear.map(id=>{
-      const g=gear[id],row=document.createElement('div');row.className='gear-row';const info=document.createElement('div'),name=document.createElement('b'),detail=document.createElement('small'),button=document.createElement('button');
-      name.textContent=g[0];detail.textContent=`${g[1]} · ${g[2]} DEF · +${g[3]} power · ${g[4]}`;info.append(name,detail);button.textContent=p.equipped[g[1]]===id?'Equipped':'Equip';button.disabled=p.equipped[g[1]]===id;button.onclick=()=>queue('equip',id);row.append(info,button);return row;
+    const select=id=>{selectedItem=id;renderInventory();if(innerWidth<800)$('item-name').scrollIntoView({block:'nearest'});};
+    const makeIcon=(id,size=48)=>{const c=document.createElement('canvas');c.width=c.height=size;c.getContext('2d').imageSmoothingEnabled=false;FredArt.icon(c.getContext('2d'),id,0,0,size);return c;};
+    const filtered=items.filter(id=>bagFilter==='all'||catalog[id].type===bagFilter);
+    const nodes=filtered.map(id=>{const item=catalog[id],button=document.createElement('button');button.className='bag-item'+(selectedItem===id?' selected':'');button.dataset.rarity=item.rarity;button.setAttribute('aria-label',item.name);button.title=item.name;button.append(makeIcon(id));button.onclick=()=>select(id);
+      if(equipped(id)){const m=document.createElement('span');m.className='equipped-mark';m.textContent='E';button.append(m);}
+      const rank=p.enhancements[id]||0;if(rank){const m=document.createElement('span');m.className='item-rank';m.textContent='+'+rank;button.append(m);}
+      if(id==='chips'||id==='materials'){const m=document.createElement('span');m.className='stack';m.textContent=id==='chips'?p.chips:p.materials;button.append(m);}return button;});
+    while(nodes.length<24){const b=document.createElement('div');b.className='bag-item empty';nodes.push(b);}$('gear-list').replaceChildren(...nodes);
+    $('equipment-slots').replaceChildren(...['head','body','pants','shoes','accessory','backpack'].map(slot=>{
+      const id=p.equipped[slot],b=document.createElement('button');b.className='equip-slot'+(!id?' empty':'')+(selectedItem===id?' selected':'');b.setAttribute('aria-label',slot+': '+(id?catalog[id].name:'empty'));b.title=id?catalog[id].name:'No '+slot+' equipped';if(id){b.append(makeIcon(id,36));b.onclick=()=>select(id);}else{const c=document.createElement('span');c.textContent='+';b.append(c);b.disabled=true;}const label=document.createElement('small');label.textContent=slot.toUpperCase();b.append(label);return b;
     }));
+    document.querySelectorAll('[data-bag-filter]').forEach(b=>b.classList.toggle('active',b.dataset.bagFilter===bagFilter));
   }
+  const item=catalog[selectedItem],rank=p.enhancements[selectedItem]||0;
+  $('item-name').textContent=item.name+(rank?' +'+rank:'');$('item-rarity').textContent=item.rarity.toUpperCase();$('item-slot').textContent=item.slot.toUpperCase();$('item-description').textContent=item.description;
+  const icon=$('item-art').getContext('2d');icon.clearRect(0,0,96,96);FredArt.icon(icon,selectedItem,0,0,96);
+  const comparison=[];
+  if(item.type==='weapon'){const w=FredCore.WEAPONS[selectedItem],bonus=p.stats.power-(p.enhancements[p.weapon]||0)*3+rank*3;
+    comparison.push(row('Hit damage',w.damage+bonus,'compare-row'),row('Recovery',w.cooldown.toFixed(2)+' sec','compare-row'),row('Reach',w.range+' px','compare-row'));
+  }else if(item.type==='armor'){
+    const g=FredCore.GEAR[selectedItem],currentId=p.equipped[item.slot],current=FredCore.GEAR[currentId]||{},currentRank=p.enhancements[currentId]||0;
+    for(const [label,value,delta] of [['Defense',g.defense+rank,g.defense+rank-(current.defense||0)-currentRank],['Attack power',g.power||0,(g.power||0)-(current.power||0)],['Focus / sec',g.focus||0,(g.focus||0)-(current.focus||0)]]){
+      const d=row(label,String(value)+(delta?' ('+(delta>0?'+':'')+delta+')':''),'compare-row');d.lastChild.className=delta>0?'positive':delta<0?'negative':'';comparison.push(d);
+    }
+  }else comparison.push(row(selectedItem==='chips'?'Heal amount':'In your bag',selectedItem==='chips'?'38 HP':selectedItem==='materials'?p.materials:'Quest record','compare-row'));
+  $('item-comparison').replaceChildren(...comparison);
+  const use=$('item-equip');use.textContent=item.type==='supply'?selectedItem==='chips'?'Eat chips':'Not equippable':equipped(selectedItem)?'Equipped':'Equip';use.disabled=item.type==='supply'?(selectedItem!=='chips'||p.chips<=0||p.hp>=100||p.heal_cd>0):equipped(selectedItem);
+  $('upgrade').disabled=item.type==='supply'||p.materials<3||rank>=5||p.zone!=='alpha';$('upgrade').textContent='Reinforce +'+Math.min(5,rank+1)+' · 3 materials';
+  $('item-upgrade-note').textContent=item.type==='supply'?'Select a weapon or armor piece to reinforce it.':p.zone==='alpha'?'Weapons gain +3 power; armor gains +1 defense per tier.':'Return to the Alpha workbench to reinforce this item.';
   const titles=p.titles.join('|');if($('title-select').dataset.items!==titles){$('title-select').dataset.items=titles;$('title-select').replaceChildren(...(p.titles.length?p.titles:['No titles yet']).map(t=>{const o=document.createElement('option');o.textContent=t;o.value=t;return o;}));}
   $('title-select').value=p.title||'No titles yet';
 }
@@ -325,6 +400,7 @@ function renderMap(){
 }
 const keyActions={' ':'dodge',q:'space',h:'heal',e:'interact',r:'reload'};
 window.addEventListener('keydown',e=>{
+  if((e.key==='Tab'||e.key.toLowerCase()==='i'||e.key.toLowerCase()==='b')&&$('inventory').open){e.preventDefault();$('inventory').close();return;}
   if(e.key==='Escape'&&!activeDialog()&&state){e.preventDefault();showDialog('game-menu');return;}
   if(activeDialog())return;
   const key=e.key.length===1?e.key.toLowerCase():e.key;
@@ -334,18 +410,19 @@ window.addEventListener('keydown',e=>{
   if(e.repeat)return;
   if(keyActions[key])queue(keyActions[key]);
   if(['1','2','3'].includes(key))queue('weapon',['nerf','saber','bat'][Number(key)-1]);
-  if(key==='i')showDialog('inventory');if(key==='m')showDialog('campus-map');
+  if(key==='i'||key==='b'||key==='Tab'){e.preventDefault();showDialog('inventory');}if(key==='m')showDialog('campus-map');
 });
 window.addEventListener('keyup',e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;keys.delete(k);if(k==='j')attack=false;if(k==='k')block=false;});
 window.addEventListener('blur',()=>{keys.clear();attack=block=false;pointerAim=false;});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){keys.clear();attack=block=false;}});
 canvas.addEventListener('pointermove',e=>{
   if(!state||e.pointerType==='touch')return;
+  pointerPosition={x:e.clientX,y:e.clientY};
   pointerAim=true;const r=canvas.getBoundingClientRect(),p=state.self,[w,h]=sizes[p.zone];
   const cx=Math.round(Math.max(0,Math.min(w-canvas.width,camera.x))),cy=Math.round(Math.max(0,Math.min(h-canvas.height,camera.y)));
   aim=Math.atan2((e.clientY-r.top)/r.height*canvas.height+cy-p.y,(e.clientX-r.left)/r.width*canvas.width+cx-p.x);
 });
-canvas.addEventListener('pointerdown',e=>{if(activeDialog())return;canvas.focus();canvas.setPointerCapture(e.pointerId);if(e.button===0)attack=true;if(e.button===2)block=true;});
+canvas.addEventListener('pointerdown',e=>{if(activeDialog())return;canvas.focus();canvas.setPointerCapture(e.pointerId);if(e.button===0)attack=true;if(e.button===2&&state){const r=canvas.getBoundingClientRect(),p=state.self,[w,h]=sizes[p.zone];const cx=Math.round(Math.max(0,Math.min(w-canvas.width,camera.x))),cy=Math.round(Math.max(0,Math.min(h-canvas.height,camera.y)));pendingTarget={x:(e.clientX-r.left)/r.width*canvas.width+cx,y:(e.clientY-r.top)/r.height*canvas.height+cy};send();}});
 window.addEventListener('pointerup',()=>{attack=block=false;});canvas.addEventListener('pointercancel',()=>{attack=block=false;});canvas.addEventListener('contextmenu',e=>e.preventDefault());
 for(const b of document.querySelectorAll('[data-key]')){
   b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(b.dataset.key);pointerAim=false;const dirs={w:-Math.PI/2,a:Math.PI,s:Math.PI/2,d:0};aim=dirs[b.dataset.key];};
@@ -358,7 +435,7 @@ for(const [id,type] of [['touch-attack','attack'],['touch-block','block']]){
 $('sprite-file').onchange=async(e)=>{
   const f=e.target.files[0];if(!f)return;if(f.size>12*1024*1024){$('sprite-status').textContent='Choose a PNG or WebP under 12 MB.';return;}
   const url=URL.createObjectURL(f),img=new Image();
-  img.onload=()=>{atlas=img;URL.revokeObjectURL(url);$('sprite-status').textContent='Local sprite preview loaded. Equipment overlays and action frames are not yet integrated.';};
+  img.onload=()=>{atlas=img;atlasFrames=null;frameCache.clear();URL.revokeObjectURL(url);$('sprite-status').textContent='Local atlas preview loaded. The built-in prepared atlas resumes when you reload.';};
   img.onerror=()=>{URL.revokeObjectURL(url);$('sprite-status').textContent='Could not read this image. Use PNG or WebP.';};img.src=url;
 };
 session.paused=()=>!!activeDialog()||document.hidden;
@@ -403,3 +480,5 @@ $('leave-session').onclick=()=>{session.leave();$('invite-output').value=$('repl
 document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const source=$(b.dataset.copy);source.focus();source.select();try{await navigator.clipboard.writeText(source.value);$('lan-status').textContent='Code copied. Send the whole code privately.';}catch{$('lan-status').textContent='Code selected. Use Copy / Ctrl+C, then send it privately.';}});
 window.addEventListener('pagehide',()=>{session.persist();});
 resize();requestAnimationFrame(paint);$('welcome').showModal();
+document.querySelectorAll('canvas[data-icon]').forEach(c=>{c.getContext('2d').imageSmoothingEnabled=false;FredArt.icon(c.getContext('2d'),c.dataset.icon,0,0,c.width);});
+document.fonts.ready.then(()=>staticScenes.clear());

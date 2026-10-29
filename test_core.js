@@ -20,6 +20,25 @@ function fight(w,t){const p=w.players.get(t),used=new Set();let darts=0;
 }
 {
   const w=new World(),[t,p]=player(w);
+  // Click-to-walk goes around a desk, and invalid/stale clicks cannot move through walls.
+  w.input(t,{keys:[],angle:0,target:{x:700,y:230}});
+  for(let i=0;i<1200&&p.path.length;i++)control(w,t);
+  assert(Math.hypot(p.x-700,p.y-230)<8,'Click path reaches destination without clipping furniture');
+  w.input(t,{keys:[],angle:0,target:{x:100,y:100}});assert.equal(p.path.length,0);
+  assert.throws(()=>w.input(t,{keys:[],angle:0,target:{x:NaN,y:100}}));
+  walk(w,t,425,160);w.action(t,'interact');assert(p.gear.includes('headphones'));const count=p.gear.length;w.action(t,'interact');assert.equal(p.gear.length,count);
+  w.action(t,'equip','headphones');assert.equal(w.stats(p).focus_regen,8);
+  walk(w,t,305,425);w.action(t,'interact');assert(p.gear.includes('backpack'));w.action(t,'equip','backpack');assert.equal(w.stats(p).focus_regen,9);
+  p.materials=6;w.action(t,'upgrade','hoodie');assert.equal(p.enhancements.hoodie,1);assert.equal(w.stats(p).defense,9);
+  w.action(t,'upgrade','nerf');assert.equal(p.enhancements.nerf,1);assert.equal(p.materials,0);assert.equal(p.upgrade,1);
+  const before=w.stats(p).power;w.action(t,'weapon','bat');assert.equal(w.stats(p).power,before-3,'Only the upgraded weapon gets its attack bonus');
+  const loaded=World.load(w.serialize(t)).world.players.get(t);assert.equal(loaded.enhancements.hoodie,1);assert.equal(loaded.equipped.backpack,'backpack');assert.equal(loaded.claimed.length,2);
+  const old=w.serialize(t);for(const entry of old.players){delete entry.character.enhancements;delete entry.character.claimed;entry.character.gear=entry.character.gear.filter(g=>['hoodie','jersey','shoes','chain'].includes(g));entry.character.equipped={body:'hoodie',shoes:'shoes'};}
+  const migrated=World.load(old).world.players.get(t);assert(migrated.gear.includes('jeans'));assert.equal(migrated.enhancements.bat,1);
+  console.log('PASS: click navigation, blocked targets, idempotent supply loot, six-slot gear, focus bonuses, per-item upgrades and old-save migration.');
+}
+{
+  const w=new World(),[t,p]=player(w);
   walk(w,t,430,230);walk(w,t,700,230);w.action(t,'interact');assert.equal(p.quest,1);w.action(t,'interact');assert.equal(p.xp,20);
   walk(w,t,430,230);walk(w,t,440,610);w.action(t,'interact');assert.equal(p.zone,'campus');
   walk(w,t,680,1705);walk(w,t,680,1210);walk(w,t,1155,1210);w.action(t,'interact');assert.equal(p.zone,'gym');

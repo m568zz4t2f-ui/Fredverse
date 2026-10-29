@@ -7,7 +7,10 @@
     bat:{name:'MLB Prospect',damage:34,cooldown:.85,range:110},
   };
   const GEAR={hoodie:{slot:'body',defense:3,set:'space'},jersey:{slot:'body',defense:1,power:4},
-    shoes:{slot:'shoes',defense:2,set:'space'},chain:{slot:'accessory',defense:2,set:'space'}};
+    jeans:{slot:'pants',defense:1,power:1,set:'space'},shoes:{slot:'shoes',defense:2,set:'space'},
+    chain:{slot:'accessory',defense:2,set:'space'},headphones:{slot:'head',defense:1,focus:2},backpack:{slot:'backpack',defense:1,focus:1}};
+  const LOOT=[{id:'bag',item:'backpack',zone:'alpha',x:305,y:425,name:'The Semester Hauler'},
+    {id:'notes',item:'headphones',zone:'alpha',x:425,y:140,name:'Five-Hour Study Session'}];
   const BUILDINGS=[
     ['west','Nutwood West',800,180,250,160],['chapel','Pacific Auditorium',1370,170,290,185],
     ['library','Darling Library',1080,400,240,210],['east','Nutwood East',1430,640,235,165],
@@ -24,8 +27,8 @@
   function id(){const a=new Uint8Array(24);globalThis.crypto.getRandomValues(a);return Array.from(a,x=>x.toString(16).padStart(2,'0')).join('');}
   function solid(zone,x,y){const [w,h]=ZONES[zone];return x<22||y<42||x>w-22||y>h-22||OBSTACLES[zone].some(([a,b,c,d])=>x>a-13&&x<a+c+13&&y>b-10&&y<b+d+10);}
   function fresh(name,variant){return {name,variant,zone:'alpha',x:440,y:520,hp:100,focus:100,xp:0,level:1,materials:0,upgrade:0,
-    weapon:variant==='Dorm Fred'?'nerf':'bat',gear:['hoodie','jersey','shoes'],equipped:{body:variant==='Dorm Fred'?'hoodie':'jersey',shoes:'shoes'},
-    titles:[],title:'',quest:0,wins:0,chapter:0,chips:3,ammo:8,angle:-Math.PI/2,online:false,seen:0,input:{},swing:0,invuln:0,
+    weapon:variant==='Dorm Fred'?'nerf':'bat',gear:['hoodie','jersey','jeans','shoes'],equipped:{body:variant==='Dorm Fred'?'hoodie':'jersey',pants:'jeans',shoes:'shoes'},enhancements:{},claimed:[],
+    titles:[],title:'',quest:0,wins:0,chapter:0,chips:3,ammo:8,angle:Math.PI/2,online:false,seen:0,input:{},swing:0,invuln:0,
     shield:0,attack_cd:0,dodge_cd:0,heal_cd:0,ability_cd:0,reload:0,revive:0,revive_time:0,ready:false,
     notice:'Find the remote beside the TV, northeast of the rest bench. E to interact. The bed is off limits.'};}
   const numeric={hp:[0,100],focus:[0,100],xp:[0,1e8],materials:[0,1e6],upgrade:[0,5],quest:[0,2],wins:[0,1e6],chapter:[0,1],chips:[0,3],ammo:[0,8]};
@@ -44,12 +47,19 @@
         if(typeof value!=='number'||!Number.isFinite(value)||value<min||value>max||(key!=='hp'&&key!=='focus'&&!Number.isInteger(value)))throw Error('Invalid saved '+key+'.');
         q[key]=value;
       }
-      if(!Object.hasOwn(WEAPONS,p.weapon)||!Array.isArray(p.gear)||p.gear.length>4||!p.gear.every(g=>typeof g==='string'&&Object.hasOwn(GEAR,g))||new Set(p.gear).size!==p.gear.length)throw Error('Invalid saved gear.');
+      if(!Object.hasOwn(WEAPONS,p.weapon)||!Array.isArray(p.gear)||p.gear.length>7||!p.gear.every(g=>typeof g==='string'&&Object.hasOwn(GEAR,g))||new Set(p.gear).size!==p.gear.length)throw Error('Invalid saved gear.');
       q.weapon=p.weapon;q.gear=[...p.gear];q.equipped={};
-      if(!p.equipped||typeof p.equipped!=='object'||Array.isArray(p.equipped)||Object.keys(p.equipped).length>3)throw Error('Invalid equipment.');
+      if(!p.equipped||typeof p.equipped!=='object'||Array.isArray(p.equipped)||Object.keys(p.equipped).length>6)throw Error('Invalid equipment.');
       for(const [slot,g] of Object.entries(p.equipped)){
         if(!q.gear.includes(g)||GEAR[g].slot!==slot)throw Error('Equipment is not owned or has the wrong slot.');q.equipped[slot]=g;
       }
+      if(!q.gear.includes('jeans')){q.gear.push('jeans');q.equipped.pants='jeans';}
+      const enhancements=p.enhancements??(p.upgrade?{[p.weapon]:p.upgrade}:{});
+      if(!enhancements||typeof enhancements!=='object'||Array.isArray(enhancements)||Object.keys(enhancements).length>10)throw Error('Invalid item upgrades.');
+      q.enhancements={};for(const [item,rank] of Object.entries(enhancements)){
+        if(!(Object.hasOwn(WEAPONS,item)||q.gear.includes(item))||!Number.isInteger(rank)||rank<0||rank>5)throw Error('Invalid item upgrade tier.');q.enhancements[item]=rank;
+      }
+      const claimed=p.claimed??[];if(!Array.isArray(claimed)||claimed.length>2||!claimed.every(v=>LOOT.some(l=>l.id===v))||new Set(claimed).size!==claimed.length)throw Error('Invalid supply pickups.');q.claimed=[...claimed];
       if(!Array.isArray(p.titles)||p.titles.length>2||!p.titles.every(t=>['An Hour Early','Prepared for Convocation'].includes(t))||new Set(p.titles).size!==p.titles.length||typeof p.title!=='string'||(p.title&&!p.titles.includes(p.title)))throw Error('Invalid title.');
       q.titles=[...p.titles];q.title=p.title;q.level=1+Math.floor(q.xp/120);
       // Resume in a safe place, preserve health and progression, discard transient encounter state.
@@ -74,8 +84,9 @@
       token=id();const p=fresh(name.trim(),variant);Object.assign(p,{online:true,seen:this.clock});this.players.set(token,p);this.dirty=true;return token;
     }
     disconnect(token){const p=this.players.get(token);if(p)Object.assign(p,{online:false,ready:false,input:{}});this.dirty=true;}
-    stats(p){const items=Object.values(p.equipped).map(g=>GEAR[g]);return {defense:items.reduce((s,g)=>s+g.defense,0)+p.upgrade,
-      power:items.reduce((s,g)=>s+(g.power||0),0)+p.upgrade*2+p.level*2,set:items.filter(g=>g.set==='space').length>=2};}
+    stats(p){const ids=Object.values(p.equipped),items=ids.map(g=>GEAR[g]);return {defense:items.reduce((s,g)=>s+g.defense,0)+ids.reduce((s,g)=>s+(p.enhancements[g]||0),0),
+      power:items.reduce((s,g)=>s+(g.power||0),0)+(p.enhancements[p.weapon]||0)*3+p.level*2,
+      focus_regen:6+items.reduce((s,g)=>s+(g.focus||0),0),set:items.filter(g=>g.set==='space').length>=2};}
     snapshot(token){const p=this.players.get(token);if(!p)throw Error('Enter campus first.');
       const fields=['name','variant','zone','x','y','hp','focus','level','weapon','equipped','angle','swing','invuln','shield','title','revive','ready'];
       const boss=this.boss?Object.fromEntries(Object.entries(this.boss).filter(([k])=>k!=='participants')):null;
@@ -86,6 +97,7 @@
     input(token,data){const p=this.players.get(token);if(!p||!p.online)throw Error('Fred is disconnected. Rejoin the host.');
       if(!data||typeof data!=='object'||Array.isArray(data)||!Array.isArray(data.keys)||data.keys.length>12||!data.keys.every(k=>typeof k==='string'&&k.length<=12)||!Number.isFinite(data.angle))throw Error('Invalid controls.');
       p.input={keys:data.keys,attack:data.attack===true,block:data.block===true};p.angle=data.angle%(2*Math.PI);p.seen=this.clock;
+      if(data.target!==undefined){const target=data.target;if(!target||typeof target!=='object'||!Number.isFinite(target.x)||!Number.isFinite(target.y))throw Error('Invalid walking target.');this.navigate(p,target.x,target.y);}
       if(data.action!==undefined){if(typeof data.action!=='string'||data.action.length>20||!(data.value===undefined||typeof data.value==='string'))throw Error('Invalid action.');this.action(token,data.action,data.value);}
     }
     action(token,action,value){const p=this.players.get(token);if(!p)return;
@@ -99,8 +111,10 @@
       else if(action==='weapon'&&Object.hasOwn(WEAPONS,value))p.weapon=value;
       else if(action==='equip'&&p.gear.includes(value))p.equipped[GEAR[value].slot]=value;
       else if(action==='upgrade'){
+        const item=value??p.weapon,rank=p.enhancements[item]||0;
         if(p.zone!=='alpha')p.notice='Upgrade at the Alpha workbench.';
-        else if(p.materials>=3&&p.upgrade<5){p.materials-=3;p.upgrade++;p.notice='Workbench upgrade: +2 power, +1 defense. Ready for the next chapter.';}
+        else if(!(Object.hasOwn(WEAPONS,item)||p.gear.includes(item)))p.notice='That item is not in your inventory.';
+        else if(p.materials>=3&&rank<5){p.materials-=3;p.enhancements[item]=rank+1;p.upgrade=Math.max(p.upgrade,rank+1);p.notice='Item reinforced to +'+(rank+1)+'. Weapons gain 3 power; armor gains 1 defense per tier.';}
         else p.notice='Upgrade needs three practice materials. Maximum tier: five.';
       }else if(action==='title'&&p.titles.includes(value))p.title=value;
       else if(action==='interact')this.interact(token);
@@ -114,6 +128,8 @@
       this.dirty=true;
     }
     interact(token){const p=this.players.get(token);
+      const loot=LOOT.find(l=>l.zone===p.zone&&!p.claimed.includes(l.id)&&dist(l,p)<65);
+      if(loot){p.claimed.push(loot.id);if(!p.gear.includes(loot.item))p.gear.push(loot.item);p.notice='FOUND · '+loot.name+'. Open your bag (I) to inspect and equip it.';this.dirty=true;return;}
       if(p.zone==='campus'){
         for(const [id,name,x,y,w,h] of BUILDINGS)if(dist(p,{x:x+w/2,y:y+h+35})<100){
           if(['alpha','gym','chapel'].includes(id)){
@@ -153,6 +169,22 @@
         this.boss=null;this.projectiles=[];this.dirty=true;}
     }
     move(p,dx,dy){if(!solid(p.zone,p.x+dx,p.y))p.x+=dx;if(!solid(p.zone,p.x,p.y+dy))p.y+=dy;}
+    navigate(p,x,y){
+      p.path=[];p.path_zone=p.zone;if(p.hp<=0||solid(p.zone,x,y)){p.notice='That spot is blocked. Choose an open path.';return;}
+      const cell=24,[w,h]=ZONES[p.zone],cols=Math.ceil(w/cell),rows=Math.ceil(h/cell),start=[Math.floor(p.x/cell),Math.floor(p.y/cell)],goal=[Math.floor(x/cell),Math.floor(y/cell)];
+      const key=(cx,cy)=>cy*cols+cx,first=key(...start),last=key(...goal),queue=[start],parents=new Map([[first,null]]);
+      // ponytail: bounded campus BFS on a 24px grid; replace only if worlds outgrow this campus.
+      for(let head=0;head<queue.length;head++){
+        const [cx,cy]=queue[head],current=key(cx,cy);if(current===last)break;
+        for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=cx+dx,ny=cy+dy,k=key(nx,ny);
+          if(nx<0||ny<0||nx>=cols||ny>=rows||parents.has(k)||solid(p.zone,nx*cell+cell/2,ny*cell+cell/2))continue;
+          parents.set(k,current);queue.push([nx,ny]);
+        }
+      }
+      if(!parents.has(last)){p.notice='No clear walking route. Try a nearer spot or use WASD.';return;}
+      for(let k=last;k!==first;k=parents.get(k))p.path.unshift({x:(k%cols)*cell+cell/2,y:Math.floor(k/cols)*cell+cell/2});
+      p.path.push({x,y});
+    }
     tick(dt){if(!Number.isFinite(dt)||dt<=0||dt>.1)throw Error('Invalid simulation step.');this.clock+=dt;
       for(const [token,p] of this.players){if(this.clock-p.seen>5){p.online=false;p.input={};}if(!p.online)continue;
         for(const cd of ['swing','invuln','shield','attack_cd','dodge_cd','heal_cd','ability_cd'])p[cd]=Math.max(0,p[cd]-dt);
@@ -165,10 +197,14 @@
           }
           p.revive_time=p.revive;if(p.revive>=2.5){Object.assign(p,{hp:45,invuln:2,revive:0,revive_time:0});this.dirty=true;}continue;
         }
-        p.focus=Math.min(100,p.focus+dt*6);
-        const dx=Number(keys.includes('d')||keys.includes('ArrowRight'))-Number(keys.includes('a')||keys.includes('ArrowLeft')),
-          dy=Number(keys.includes('s')||keys.includes('ArrowDown'))-Number(keys.includes('w')||keys.includes('ArrowUp')),len=Math.hypot(dx,dy)||1,speed=p.input.block&&live?85:175;
-        this.move(p,dx/len*speed*dt,dy/len*speed*dt);
+        p.focus=Math.min(100,p.focus+dt*this.stats(p).focus_regen);
+        let dx=Number(keys.includes('d')||keys.includes('ArrowRight'))-Number(keys.includes('a')||keys.includes('ArrowLeft')),
+          dy=Number(keys.includes('s')||keys.includes('ArrowDown'))-Number(keys.includes('w')||keys.includes('ArrowUp'));
+        if(dx||dy||!live||p.path_zone!==p.zone)p.path=[];
+        const speed=p.input.block&&live?85:175;
+        if(p.path?.length&&!dx&&!dy){const next=p.path[0],d=dist(p,next);if(d<speed*dt+1){this.move(p,next.x-p.x,next.y-p.y);p.path.shift();}
+          else{dx=(next.x-p.x)/d;dy=(next.y-p.y)/d;if(!p.input.attack)p.angle=Math.atan2(dy,dx);this.move(p,dx*speed*dt,dy*speed*dt);}}
+        else{const len=Math.hypot(dx,dy)||1;this.move(p,dx/len*speed*dt,dy/len*speed*dt);}
         if(p.input.attack&&live&&p.attack_cd<=0){
           const w=WEAPONS[p.weapon];p.attack_cd=w.cooldown;p.swing=.22;
           const bonus=this.stats(p).power+(p.variant==='MLB Fred'&&p.weapon==='bat'?5:0);
@@ -191,5 +227,5 @@
       b.hazards=b.hazards.filter(h=>h.time>-.3);
     }
   }
-  globalThis.FredCore={World,WEAPONS,GEAR,BUILDINGS,ZONES,OBSTACLES,solid,dist,id,validateSave};
+  globalThis.FredCore={World,WEAPONS,GEAR,BUILDINGS,ZONES,OBSTACLES,LOOT,solid,dist,id,validateSave};
 })();
