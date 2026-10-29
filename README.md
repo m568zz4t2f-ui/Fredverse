@@ -1,95 +1,117 @@
-# The Fred Verse
+# The Fred Verse · browser edition
 
-A playable early **2D pixel-art action RPG** prototype set in an approximate Hope International University campus. All players are Fred variants. Solo and 1–4-player local-network co-op use the same host-authoritative simulation. Original fictional game; not endorsed by HIU. Professors are nonlethal fantasy practice encounters, not villains.
+**Download `The-Fred-Verse.html` and open it in a modern desktop browser.** No Python, terminal, npm, account, internet, or external assets are required for solo play. It is a self-contained, roughly 94 KB game. `index.html` is the same build, ready for static hosting.
 
-## Run / host
+[Download the HTML](https://github.com/m568zz4t2f-ui/Fredverse/raw/refs/heads/main/The-Fred-Verse.html) · [Source ZIP](https://github.com/m568zz4t2f-ui/Fredverse/archive/refs/heads/main.zip)
 
-Requires **Python 3.12 or newer** and a modern browser. No packages, Node build, accounts, internet, or external assets are required.
+Use the browser's actual HTML page, not a file manager's preview. On iPhone/iPad, use a hosted HTTPS page in Safari; Files/Quick Look may display an attachment without running JavaScript. Desktop direct-file play is the intended downloadable target. If browser policy blocks local files, use a static hosted copy.
 
-**Download from GitHub:** choose **Code → Download ZIP**, extract the ZIP, then double-click `PLAY_WINDOWS.bat` on Windows or run `sh PLAY_MAC.command` on macOS. Install Python 3.12+ from python.org first if you do not have it. The launcher starts the host and opens the game in your browser. Keep its terminal window open while playing. Opening `web/index.html` directly does **not** run the game; it needs the host.
+## Play and share
 
-```sh
-cd /workspace/Fredverse  # or your local checkout directory
-python server.py
-```
+1. Save the HTML to your computer and open it in Chrome, Edge, or Firefox.
+2. Choose **New game** and a Fred variant. Later choose **Continue your Fred**.
+3. Send a friend the same HTML file. The in-game Menu also has **Download this HTML**.
+4. To share a play link, publish the static build as described below. A GitHub source page or raw download is not itself a hosted game page.
 
-On the host computer open its loopback address on port 8000 in a browser. For LAN play, other devices open **the host computer's actual LAN IPv4 address on port 8000**. Choose a name and Dorm Fred or MLB Fred. Both can use all three weapons and complete the slice alone. Four connected characters total, including the host. A guest browser does not need Python or project files.
+### GitHub Pages
 
-The host listens on all interfaces by default. Allow inbound **TCP 8000** on a trusted local network. For a host restricted to its own computer:
+The repository already has a standalone **`index.html` at its root**. In the repository's **Settings → Pages**, choose **Deploy from a branch**, **main**, **/ (root)** and save. Wait for GitHub's deployment to complete, then use the actual **Visit site** link GitHub provides. No build command, backend, or environment secrets are needed. Enable Pages only when you intend the game to be publicly accessible; availability depends on the repository/account plan.
 
-```sh
-python server.py --host 127.0.0.1
-```
+**Publication is not confirmed.** This task could push repository files, but GitHub Pages API access returned `Forbidden`. No hosted play URL is asserted as verified. Uploading `index.html` to another ordinary static HTTPS host also works; no runtime Python server is involved.
 
-Optional discovery on a second computer with this checkout:
+## A complete first chapter
 
-```sh
-python server.py --discover
-```
+An original 2D pixel-art RPG prototype at an approximate Hope International University in Fullerton. Every playable character is a Fred variant. This is fictional, not an official or endorsed HIU game. Professors are nonlethal practice encounters, not villains.
 
-Discovery uses UDP broadcast on port 47654. Guest Wi-Fi, network isolation, or firewalls may block it. Direct-address joining does not depend on discovery. Use `--port 8010` for a different port and `--save /path/to/world.json` for a separate world. This HTTP host is for trusted LANs, not public internet deployment. No deployment or publication was performed.
+- **Dorm Fred**: longer Personal Space shield. **MLB Fred**: stronger bat swings, red jersey. Both can use all weapons and finish solo.
+- Find the remote beside the TV in Alpha: walk north, then east. Press **E** nearby. It remains safely at the dorm.
+- Exit the south door. Open **M** to find **E: Darling Pavilion**, north/east of Alpha. Enter its south door, approach the practice marker and press E. Solo starts immediately; all living Freds in the gym must ready for a party encounter.
+- Complete **Robbie Phillips · Three-Point Practice**. Red circles telegraph danger. Move, guard, or dodge. Nerf shoots magazine-fed foam projectiles, saber has quick narrow swings, and the bat has a wider, heavier committed attack. All three work against the practice boss.
+- Earn 90 XP, three practice materials, a Chain of Personal Space, and **An Hour Early**. Return to Alpha, open equipment and upgrade at the workbench. Two Personal Space pieces grant a shield after a successful guard.
+- Visit **B: Pacific Auditorium / Grana Chapel** and interact to meet **Big P — The President**. With the practice and upgrade done, finish chapter one: earn 35 XP and **Prepared for Convocation**. This is fictional dialogue. Paul Alexander's culminating boss is reserved for later story progression, not trivialized here.
+- Repeat the practice with another build or friends. A first quest/chapter/title unlock cannot award twice; newly started repeat practices intentionally award more XP/materials.
 
-## Play the slice
-
-1. Start in an approximate Alpha shared dorm room. Walk north then east to the TV-side remote; press **E** nearby to complete the preparation quest. Bunks and large furniture have collision. The assignment of this room and belongings to the player is fictional, not a claim about a real room's ownership.
-2. Walk south to the door, press E, and open **M** for the campus map. From Alpha, follow the main path north and then east to **E: Darling Pavilion**. Approach its south door and press E.
-3. Approach the gym practice marker and press E to ready. All living Freds currently in the gym must ready. Solo starts immediately. Capacity and encounter difficulty freeze at this point. Guests arriving during practice wait outside for the next encounter.
-4. Complete **Robbie Phillips · Three-Point Practice**. This is a provisional original encounter, not a depiction of real conduct or a verified place where he teaches. Red circles telegraph danger. Move or dodge; guard reduces damage. Switch between foam darts, quick blue-saber strikes, and committed wide bat swings. All three weapons work. Aiming matters.
-5. Earn XP, three practice materials, the Chain of Personal Space, and **An Hour Early**. Return to Alpha, equip gear with I, and spend materials on a workbench upgrade. Two Personal Space pieces grant a shield after a successful guard. Repeat the encounter with a different build. At 120 total XP, level increases; each level adds 2 power.
-6. Visit **B: Pacific Auditorium** for an early fictional introduction to **Big P — The President**. Paul Alexander's culminating boss encounter is deliberately not implemented in this first chapter.
-
-### Controls
+## Controls
 
 | Input | Action |
 |---|---|
-| WASD / arrow keys | Move |
-| Mouse | Aim |
+| WASD / arrows | Move |
+| Mouse | Aim; keyboard-only aim follows movement until mouse use |
 | Left click / hold J | Attack |
 | Right click / hold K | Guard |
 | Space | Dodge: 12 Focus, brief invulnerability |
-| Q | Personal Space: 25 Focus, area attack and nearby friendly shield / Focus restoration |
-| H | Emergency Chips: heal 38, three supplies per rest |
-| R | Reload eight Nerf darts, 1.3 seconds |
-| 1 / 2 / 3 | Nerf / lightsaber / baseball bat |
+| Q | Personal Space: 25 Focus, area attack, nearby allied shield/Focus |
+| H | Emergency Chips: heal 38; three supplies per rest |
+| R | Reload eight darts, 1.3 seconds |
+| 1 / 2 / 3 | Nerf / saber / bat |
 | E | Interact, enter/exit, rest, ready |
-| Hold E while stationary near a downed Fred | Revive over 2.5 seconds; movement, attacking, distance, or damage interrupts |
-| I / M | Equipment / map |
+| Hold E near a downed Fred while stationary | Revive over 2.5 seconds; movement, attack, distance or damage interrupts |
+| I / M / Escape | Equipment / campus map / menu |
 
-Touch devices have a directional pad, attack/guard/interact buttons, and ability buttons. Movement sets touch aim; weapon switching and inventory are below the viewport. Keyboard/mouse is the primary initial delivery choice; no controller support yet. Desktop aim follows the mouse; keyboard-only aim follows movement until the mouse is used. Losing window focus clears held controls.
+Touch controls include movement, attack/guard/interact, reload, weapon switching, equipment and abilities without scrolling to the sidebar. Touch aim follows the directional pad. No controller support yet. Menu settings adjust pixel scale and camera smoothing. Solo pauses in menus or when hidden; a multiplayer host keeps running while menus are open. Background tab throttling can slow co-op: keep the host in the foreground.
 
-**Dorm Fred** has a longer Personal Space shield. **MLB Fred** gains five bat damage and starts in a red jersey. All basic gear and three weapon families are available to both. Nerf has a magazine and real projectiles; saber has shorter reach and quick recovery; bat has a wider arc, longer reach, heavy hits, and longer commitment. These starter numerical values and variant names are reversible defaults.
+## Saves
 
-## Saves and multiplayer behavior
+- Browser save format **version 2**, separate from the old Python prototype. Autosaves on important actions, every five seconds and on page hide when possible. Continue restores at Alpha with health and progression preserved; an interrupted practice resets.
+- **Menu → Export save** downloads a JSON backup. **Import save** validates its version, size, identity, equipment, numerical bounds and duplicate keys before replacing anything. Existing progress requires confirmation before replacement. New Game also asks before replacing a world.
+- Local storage is browser/address dependent, especially for `file://`. If unavailable or full, the game still plays in memory and shows **MEMORY ONLY · EXPORT YOUR SAVE**. Export before closing. Export/import is the supported way to move solo worlds between addresses/devices.
+- Multiplayer world and characters belong to the host. Its export contains the full world and guest rejoin keys: keep backups private. Guest-only character export/import and account recovery are not implemented.
 
-- Host owns the world and every character, stored in ignored `data/world.json`. Save format version 1. Writes use an atomic replacement after flushing the temporary file. Important actions save immediately; movement saves every five seconds; clean shutdown saves. Save errors appear in the HUD. Preserve this folder when moving the host.
-- A private rejoin token lives in browser local storage, scoped to the host address and port. Use the **same browser, host address and port** to resume a Fred. Clearing browser storage loses access to that character; guest export/import, account recovery, and character selection are not implemented. No real identity information is needed.
-- The host simulates movement, collision, health, Focus, cooldowns, projectiles, gear, quest credit, boss state and rewards at 30 Hz. Browsers send controls and poll snapshots around 12 Hz; rendering interpolates positions. Clients cannot assign damage, coordinates, rewards, or health. This is actual HTTP multiplayer, not simulated party members or client-resolved combat. Rejoin tokens never appear in shared snapshots.
-- After five seconds without controls, the host marks the guest offline and frees the slot. Stale controls stop movement and attacks after half a second. An expired session rejoins at Alpha with health and gear preserved; a quick browser reload resumes the existing active session. Reload/rejoin never revives a downed Fred. Interrupted world encounters reset on host restart; character health remains saved.
-- Encounter participants, boss health scaling, and simultaneous hazard count freeze at start. All encounter participants receive personal rewards, including a participant briefly disconnected at victory. This is a generous prototype credit rule. First remote recovery and title unlocks are idempotent; repeating a newly started practice intentionally gives more XP/materials. There are no enemy/student loot farms.
-- Friendly fire and player collision are off. Personal Space helps the caster and nearby Freds. A stationary living teammate can revive a downed Fred. When nobody in the encounter is alive and online, the challenge resets; players may recover at Alpha with equipment intact. No irreversible item loss, free mid-boss reconnect revival, or mandatory multi-person mechanic.
-- JSON inputs are size/type checked, same-origin browser writes enforced, and commands validated. This is a trusted-friends LAN prototype, not production anti-cheat or an internet-hardened service. No accounts, cloud backend, host migration, or public matchmaking.
+## Browser co-op: experimental, not yet connection-verified
 
-## Verification
+The HTML includes **real WebRTC DataChannel code** using the same JavaScript simulation as solo. There is no fake party, public relay, Claude API, signaling backend or STUN/TURN dependency. It targets 1–4 players on the **same reachable local network**.
+
+1. Host starts/continues a game, opens **Invite a Fred**, and creates an invite.
+2. Guest opens the same HTML or hosted game, chooses **Join a Fred**, pastes the complete invite and creates a reply.
+3. Guest sends the entire reply privately; host pastes it and clicks **Accept reply**.
+4. Repeat with a new invite for each guest. Keep the host browser open/in the foreground. There is no automatic LAN discovery or short room code. Invitations expire after two minutes if not completed.
+
+The host resolves positions, collision, HP, Focus, cooldowns, projectiles, boss mechanics, inventory and rewards. Guests only send validated controls with increasing sequence numbers. Session snapshots do not expose other characters' private rejoin keys. Host/guest characters have independent cameras, personal rewards and friendly fire off. Encounter participants/difficulty freeze at start, shared shielding and revives work in the simulation, and all-down/disconnect resets unblock a challenge. Returning guests exchange fresh codes; their host-owned health persists, preventing reconnect revives.
+
+**Connection limitation:** local cloud Chromium is configured to disable non-proxied WebRTC UDP and generated **zero ICE candidates**. The connection test could not run here. The UI now reports that failure instead of displaying an unusable invite. **Do not call browser LAN co-op verified** until `test_browser.py --rtc-only` succeeds on normal browser/network devices. Separate physical LAN devices and mobile Safari/Firefox remain untested. Networks with peer isolation, restrictive browser policy or blocked WebRTC may not connect. Try static HTTPS hosting if a downloaded-file origin prevents WebRTC; different networks may need future signaling/STUN/TURN work.
+
+### Optional legacy multiplayer fallback
+
+The previous Python-hosted prototype is preserved at **`web/legacy/`**. It remains independent from the new browser save format and first-chapter extension. It is a fallback for developers/friends who want the previously tested HTTP co-op, **not a prerequisite for the standalone game**.
+
+With Python 3.12+ installed, `python server.py --open` (or `PLAY_WINDOWS.bat`) opens the legacy client. LAN guests visit the host's actual LAN IP, TCP port 8000, **`/legacy/`** path. Host must permit inbound TCP 8000 on a trusted network. Its saves remain in ignored `data/world.json`, format 1. Optional `python server.py --discover` uses UDP 47654. Never expose this trusted-LAN prototype as an internet server. A running server is not required for the new HTML. Python HTTP co-op tests still run separately.
+
+## Source and developer checks
+
+- `web/core.js`: one authoritative JavaScript simulation, used solo and by the browser host.
+- `web/session.js`: local saves, validation, WebRTC invite/reply and network transport.
+- `web/game.js`, `web/style.css`, `web/index.html`: renderer, art and UI.
+- `build.py`: developer-only dependency-free HTML packager. Players never run this.
+- `The-Fred-Verse.html`, `index.html`: generated self-contained builds checked into GitHub.
+- `server.py`, `test_game.py`, `web/legacy/`: optional prior Python HTTP prototype.
 
 ```sh
+node test_core.js
+python build.py --check
+# Optional browser checks require Playwright and installed Chromium:
+python test_browser.py --solo-only
+python test_browser.py --rtc-only
+# Optional legacy regression checks:
 python -m unittest -v
-node --check web/game.js  # optional syntax check when Node is installed
 ```
 
-The three standard-library checks cover a collision-aware solo trip from Alpha to the gym and back; the remote quest; boss completion using all three weapon families; shared buffs; four-player ready checks/scaling; downed/revive interruption; disconnect/reset/rejoin; personal rewards without duplicate completion; gear upgrades and save reload; rejected invalid controls; and **two real HTTP clients** agreeing on host state and equipment. Socket tests require permission to bind loopback ports.
+Run `python build.py` after editing browser sources. It embeds all CSS and three classic scripts with no module imports or runtime file fetches. On a development machine, any static HTTP server can serve the root `index.html`; no `/api` routes are used by the new game.
 
-Additional Chromium checks in this environment exercised keyboard movement, weapon switch, gear equip, map, three independent browser contexts, party state, browser-reload rejoin, and the 390px touch layout with no page errors. These are local checks. **Independent physical LAN devices, broadcast discovery across a real LAN, and device-to-device latency have not been verified.**
+### Verification outcomes
 
-## Art, references and scope
+- **Passed:** JavaScript simulation completes a collision-aware solo journey from Alpha through all three weapons, practice, upgrade, chapel and chapter ending. Save roundtrip preserves health/progression and rejects invalid/duplicate data. Four-player simulation checks cover ready/scaling, party shields, interrupted revive, disconnect/downed rejoin/reset, personal credit and input validation.
+- **Passed:** Chromium runs the exact standalone HTML served as a static page, then networking is disabled. A real-time UI-input walkthrough completes the chapter. Weapon switching, gear, pausing, export/import, reload/Continue, self-download/reopen, 390px mobile layout and memory-only storage fallback pass without uncaught page errors. No external assets or requests are required.
+- **Blocked/unverified:** actual `file://` navigation is blocked by managed browser policy (`ERR_BLOCKED_BY_ADMINISTRATOR`). The browser test does not bypass that policy; direct-file launch in a normal desktop browser remains unverified in this environment.
+- **Blocked/unverified:** real WebRTC connection test produces zero candidates under enforced browser policy; no browser multiplayer pass is claimed. Physical LAN and cross-device latency remain untested.
+- **Passed previously:** the Python prototype's two HTTP clients agreed on shared boss combat, rewards, healing and rejoin. These results do not prove browser WebRTC works.
+- **Unverified:** public HTTPS deployment/GitHub Pages; API access was forbidden. The root build is prepared for static hosting.
 
-- The user-provided handoff is summarized in `docs/DESIGN_BRIEF.md`; the original remains in the private session attachments. Confirmed requirements and proposed catalogs remain distinct. The supplied campus-map image establishes relative exterior placement: residences lower-left, academics upper-right, Pavilion/Student Center lower-right, Nutwood north. Footprints, distances, roads and playable floorplans are approximate. This is not an architectural reconstruction or navigation guide.
-- Accessible references: `IMG_1885.MOV`, `IMG_1880.MOV`, `IMG_6258.HEIC`, `IMG_9166 2.HEIC`; map, campus photographs and a Fred atlas displayed in chat. The videos and HEICs were inspected. Original reference media remain outside this checkout. Watermarked photographs were not redistributed as game textures.
-- The PDF and most historical photos/atlases named in the handoff are **not present in this workspace**. Library IDs are not usable local file paths. The inline atlas is visible for reference but has no downloadable file binding here.
-- Campus, furniture, Freds, professor figure and effects are original **procedurally drawn placeholder pixel art** with nearest-neighbor rendering. Campus glass, angular roofs, wooden bunks, mirrored closet, beige carpet, yellow suitcase and lived-in objects draw from references. The final desired likeness/detail is not complete. Professor sprite is not a likeness.
-- The Sprite dialog can locally preview a PNG/WebP of the supplied atlas (10 columns; first five directional rows; row pitch 1.0625 × cell width). It is session-only and is not uploaded or replicated. It does not yet support action frames, per-player art, persistence, or equipment overlays. Final atlas integration needs the actual file and verified slicing.
-- Alpha, gym and chapel are scrolling playable spaces. Gym and chapel extend beyond a screen. Other building exteriors are present; their interiors are deferred. The gym/chapel floorplans and objects are approximations. No exact room number, room ownership, professor routine, campus schedule, origin of variants, Uzi story, or supernatural explanation was invented as fact.
-- Combat uses sporting/foam equipment and fictional Focus-based abilities. Faith, Scripture, prayer and worship are not damage spells, currencies or stats. Professor practice is nonlethal. Real-life subjective roasts are not character facts.
+## References and remaining work
 
-### Unfinished after this first slice
+`docs/DESIGN_BRIEF.md` summarizes confirmed requirements. The original handoff/reference media remain in private session attachments. Videos `IMG_1885.MOV` and `IMG_1880.MOV`, dorm photo `IMG_6258.HEIC`, and likeness photo `IMG_9166 2.HEIC` were inspected; a campus map, campus photographs and sprite atlas are visible in chat. Historical PDF/atlas files listed in the original brief are not in the checkout. Inline images do not have a usable local file binding here. No watermarked photos were redistributed as game textures.
 
-Final detailed sprite/portrait art and action animations; map-accurate footprints and verified interiors; additional floors/quests/faculty; the full Paul Alexander progression and culminating boss; additional weapon variants; crafting and mastery depth; six armor slots (current slice has body/shoes/accessory), storage, trading, transmog and outfit/build presets; expanded solo/party interactions and map pings; gamepad; physical LAN validation and a friendlier discovery UI. Campus NPC routines, final story and the full proposed catalog remain design work. No claim is made that the complete RPG in the handoff is finished.
+Campus/furniture/Fred/professor art is original **provisional procedural pixel art**, not final detailed likenesses. The Sprite preview still requires an actual PNG/WebP atlas, assumes the earlier sheet's directional layout, is local/session-only, and does not establish verified slicing, multiplayer art replication or final action-frame integration. Final art requires the source asset and frame inspection.
+
+Exterior placement follows the supplied map: residences/pool lower-left, academics upper-right, Pavilion/Student Center lower-right, Nutwood north. Angular roofs/glass and room details reference the supplied images. Footprints/interiors are approximate, not real floorplans. Alpha, gym and chapel are enterable scrolling spaces; other interiors are deferred. No real room ownership, professor routine, sacred combat system, Uzi origin or multiverse theology is asserted.
+
+Still unfinished: final detailed art and animation; verified interiors/additional floors; more quests/faculty and the full Paul Alexander progression; weapon variants, broader mastery/crafting, full six-slot armor, storage/trading/transmog/build presets; character export/recovery; controller support; real-device LAN/phone validation; optional easy room-code infrastructure. The first chapter is playable; the full RPG catalog is not claimed complete.

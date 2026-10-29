@@ -16,7 +16,9 @@ This summarizes the user-provided design handoff for the project. The original r
 
 ## Current reversible implementation defaults
 
-Browser Canvas client plus Python 3.12 standard-library host. Host-authoritative 30 Hz simulation, HTTP input/snapshots, trusted LAN, maximum four connected Freds. Dorm Fred and MLB Fred. Alpha dorm, map-relative campus, scrolling gym/chapel. Robbie Phillips Three-Point Practice is a provisional introductory encounter, with Big P introduced through fictional dialogue rather than an early final fight.
+Primary delivery: self-contained browser HTML, Canvas rendering, and one authoritative JavaScript simulation. Solo runs locally without Python, internet or external assets. Browser co-op uses manual WebRTC invite/reply codes, with a host browser simulating up to four Freds. Actual WebRTC connections remain unverified because managed Chromium exposes no candidates; do not claim they passed. The previously tested Python 3.12 HTTP-hosted prototype remains an optional legacy fallback at web/legacy, with separate saves.
+
+Dorm Fred and MLB Fred; Alpha dorm, map-relative campus, scrolling gym/chapel. Robbie Phillips Three-Point Practice is a provisional introductory encounter. The first chapter ends after remote recovery, practice, a gear upgrade and an early meeting with Big P near the chapel stage. This is a first chapter, not the complete professor progression or final fight. Browser saves are version 2 with validation, export/import and storage-denied fallback. See README.md for exact verification and deployment limitations.
 
 Gear currently uses body, shoes and accessory slots. Royal Arts / Focus terminology, numerical balance, variants, titles and all new dialogue are provisional. Placeholder pixel sprites are not final likenesses. No canon explanation for Fred variants, exact dorm ownership, professor routines or Uzi’s story is established.
 

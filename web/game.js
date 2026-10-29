@@ -1,5 +1,7 @@
 const $ = (id) => document.getElementById(id);
 const canvas = $('world'), ctx = canvas.getContext('2d');
+const pristineHTML='<!doctype html>\n'+document.documentElement.outerHTML;
+const session=new FredSession();
 const buildings = [
   ['west', 'Nutwood West', 800, 180, 250, 160, 'A'], ['chapel', 'Pacific Auditorium', 1370, 170, 290, 185, 'B'],
   ['library', 'Darling Library', 1080, 400, 240, 210, 'C'], ['east', 'Nutwood East', 1430, 640, 235, 165, 'D'],
@@ -13,11 +15,11 @@ const gear = {
   shoes:['Black Air Forces','shoes',2,0,'Personal Space'], chain:['Chain of Personal Space','accessory',2,0,'Personal Space'],
 };
 const weaponNames = {nerf:"Owen’s Sidearm", saber:"Owen’s Blue Blade", bat:'MLB Prospect'};
-let token = '', storageOK = true;
-try { token = localStorage.getItem('fredverse-token') || ''; } catch { storageOK = false; }
+let token = '', storageOK = session.storageOK;
 let state = null, keys = new Set(), attack = false, block = false, aim = -Math.PI/2;
 let pointerAim = false, camera = {x:0,y:0}, visual = new Map(), lastZone = '', notice = '', noticeUntil = 0;
-let atlas = null, busy = false, retryAt = 0, lastFrame = performance.now();
+let atlas = null, busy = false, lastFrame = performance.now();
+let pixelScale=2,smoothCamera=true;
 let activeDialog = () => document.querySelector('dialog[open]');
 const actions = [];
 const staticScenes = new Map();
@@ -119,12 +121,18 @@ function scene(zone){
     // Mirrored closets, paneling, TV, study desk, luggage and under-bed shoes.
     rect(c,640,80,170,80,'#d9d7c3');rect(c,647,87,74,64,'#95aaa4');rect(c,728,87,74,64,'#aec0b4');rect(c,670,104,30,45,'#536e6b');rect(c,750,90,3,60,'#e8e5cd');
     rect(c,650,320,150,115,'#9c774b');rect(c,656,326,138,103,'#c49c64');rect(c,660,340,42,25,'#243a43');rect(c,668,344,24,15,'#668581');rect(c,730,332,24,30,'#c1baa1');rect(c,732,333,2,27,'#716b59');
-    rect(c,350,60,150,55,'#ac885a');rect(c,362,50,124,50,'#1c3036');rect(c,368,56,112,37,'#3d5e60');text(c,'NO SHARING',424,82,10,'#b8c7b2','center');
+    rect(c,350,60,150,55,'#ac885a');rect(c,360,72,48,30,'#2c4248');rect(c,364,75,40,20,'#789b92');rect(c,414,80,45,25,'#d8c69b');rect(c,418,84,34,1,'#8a846b');rect(c,418,90,34,1,'#8a846b');rect(c,465,73,15,31,'#4b615c');
+    rect(c,685,169,77,43,'#1e3036');rect(c,690,173,66,32,'#456770');text(c,'MY TV',723,193,8,'#d6d6b7','center');
     rect(c,682,190,70,18,'#c0aa78');rect(c,699,214,12,28,'#323d40');rect(c,702,218,6,4,'#bcaa7b');
     rect(c,280,330,42,62,'#d4b349');rect(c,287,332,28,7,'#735d37');rect(c,290,381,7,7,'#343d35');rect(c,280,410,57,32,'#994e42');rect(c,282,417,53,5,'#b56651');
     for(let k=0;k<6;k++){rect(c,245+k*7,170+k*8,6,11,'#273a3b');rect(c,245+k*7,178+k*8,6,3,'#bbc0ac');}
     rect(c,520,390,26,30,'#a76643');rect(c,523,394,20,15,'#d5b262');text(c,'CHIPS',533,405,5,'#283d38','center');
     rect(c,775,510,50,45,'#809085');for(let k=0;k<4;k++)rect(c,779+k*10,511,4,44,'#b6b9a0');
+    // Lived-in objects drawn from the supplied room photo, not claims of ownership.
+    for(let i=0;i<5;i++){rect(c,65+i*23,289,16,7,'#22373b');rect(c,66+i*23,295,15,2,'#9daca0');}
+    rect(c,246,450,7,95,'#30434a');rect(c,238,533,25,17,'#24383f');rect(c,242,481,16,32,'#425961');rect(c,242,482,3,30,'#7e9490');
+    for(let i=0;i<4;i++){rect(c,710+i*12,470,8,20,'#b9ccc0');rect(c,712+i*12,470,4,3,'#477e8d');rect(c,710+i*12,479,8,5,'#688b9b');}
+    rect(c,300,560,54,14,'#34454a');rect(c,305,550,36,7,'#6a7c70');rect(c,340,553,7,7,'#c4aa7c');
     text(c,'ALPHA · SHARED ROOM / FICTIONAL ASSIGNMENT',w/2,27,11,'#4b5c50','center');
     text(c,'REST & WORKBENCH',440,604,11,'#e9ddbd','center');text(c,'MIRRORED CLOSET',726,180,9,'#e5d9bc','center');
     rect(c,408,528,64,6,'#817358');rect(c,414,534,52,33,'#bd9f69');rect(c,423,539,15,6,'#5c766a');
@@ -144,11 +152,13 @@ function scene(zone){
     for(const xx of [100,730])for(let yy=330;yy<900;yy+=85){rect(c,xx+3,yy+7,282,40,'#605f54');rect(c,xx,yy,280,40,'#3f5d6b');for(let sx=xx+5;sx<xx+275;sx+=30){rect(c,sx,yy+4,24,13,'#597b86');rect(c,sx,yy+22,24,14,'#4d6d7b');}}
     text(c,'PACIFIC AUDITORIUM / GRANA CHAPEL',570,49,13,'#4c625b','center');text(c,'BIG P — THE PRESIDENT',570,260,15,'#e8d7a9','center');
     text(c,'CONVOCATION IS A LATER CHAPTER',570,281,10,'#e0d9bd','center');
+    text(c,'THE PRESIDENT ↑',570,790,12,'#ded5b3','center');
   }
   staticScenes.set(zone,scene);return scene;
 }
 function fred(c,p,x,y,time=0,walking=false,scale=1){
   c.save();c.translate(Math.round(x),Math.round(y));c.scale(scale,scale);
+  if(p.hp<=0)c.rotate(-Math.PI/2);
   const bob=walking?Math.round(Math.sin(time*13)):0, stride=walking?Math.round(Math.sin(time*13)*3):0;
   rect(c,-12,-2,25,6,'#233c344d');
   if(atlas){
@@ -180,13 +190,13 @@ function fred(c,p,x,y,time=0,walking=false,scale=1){
   }
   c.restore();
 }
-function resize(){canvas.width=Math.ceil(canvas.clientWidth/2);canvas.height=Math.ceil(canvas.clientHeight/2);ctx.imageSmoothingEnabled=false;}
+function resize(){canvas.width=Math.ceil(canvas.clientWidth/pixelScale);canvas.height=Math.ceil(canvas.clientHeight/pixelScale);ctx.imageSmoothingEnabled=false;}
 new ResizeObserver(resize).observe(canvas);
 function paint(now){
   const dt=Math.min(.1,(now-lastFrame)/1000);lastFrame=now;
   const p=state?.self||{zone:'alpha',x:440,y:470}, zone=p.zone, [w,h]=sizes[zone];
   if(lastZone!==zone){camera={x:p.x-canvas.width/2,y:p.y-canvas.height/2};visual.clear();lastZone=zone;}
-  camera.x+=(p.x-canvas.width/2-camera.x)*Math.min(1,dt*9);camera.y+=(p.y-canvas.height/2-camera.y)*Math.min(1,dt*9);
+  camera.x+=(p.x-canvas.width/2-camera.x)*(smoothCamera?Math.min(1,dt*9):1);camera.y+=(p.y-canvas.height/2-camera.y)*(smoothCamera?Math.min(1,dt*9):1);
   const cx=Math.round(Math.max(0,Math.min(w-canvas.width,camera.x))),cy=Math.round(Math.max(0,Math.min(h-canvas.height,camera.y)));
   ctx.clearRect(0,0,canvas.width,canvas.height);ctx.save();ctx.translate(-cx,-cy);ctx.drawImage(scene(zone),0,0);
   const time=state?.clock||now/1000;
@@ -214,45 +224,41 @@ function paint(now){
     if(q.revive>0)text(ctx,`REVIVE ${q.revive.toFixed(1)}/2.5`,v.x,v.y+15,9,'#e0c57d','center');
   }
   for(const d of state?.projectiles||[])if(d.zone===zone){rect(ctx,d.x-3,d.y-2,7,3,'#f4d38c');rect(ctx,d.x-1,d.y-1,3,1,'#87c0bd');}
-  // A restrained dithered edge keeps the center readable without blurring pixel art.
   ctx.restore();
   if(state&&notice&&now>noticeUntil){$('speech').textContent='';notice='';}
   requestAnimationFrame(paint);
 }
-function showDialog(id){keys.clear();attack=block=false;$(id).showModal();if(id==='inventory')renderInventory();if(id==='campus-map')renderMap();}
+function showDialog(id){keys.clear();attack=block=false;if(!$(id).open)$(id).showModal();if(id==='inventory')renderInventory();if(id==='campus-map')renderMap();if(id==='game-menu'){$('pause-heading').textContent=session.role==='solo'?'Paused.':'Still on campus.';$('export-save').disabled=session.role==='guest';}}
 for(const [button,id] of [['help-open','guide'],['inventory-open','inventory'],['map-open','campus-map'],['lan-open','lan'],['sprite-open','sprite']])$(button).onclick=()=>showDialog(id);
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d&&d.id!=='welcome'){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
 document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>queue(b.dataset.action));
 document.querySelectorAll('[data-weapon]').forEach(b=>b.onclick=()=>queue('weapon',b.dataset.weapon));
 $('recover').onclick=()=>queue('recover');$('upgrade').onclick=()=>queue('upgrade');$('title-select').onchange=e=>queue('title',e.target.value);
-function queue(action,value){if(state){actions.push({action,value});send();}}
+function queue(action,value){if(state&&actions.length<8){actions.push({action,value});send();}}
 async function request(path,body){
-  const res=await fetch(path,{method:body?'POST':'GET',headers:{'Content-Type':'application/json','X-Fred-Token':token},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(3500)});
-  const data=await res.json();if(!res.ok)throw Error(data.error||'Host request failed.');return data;
+  if(path==='/api/input'){session.input(body);return {ok:true};}
+  if(path==='/api/state')return session.snapshot();
+  throw Error('Unknown local command.');
 }
+function begin(){token=session.localToken;state=session.snapshot();$('welcome').close();$('continue-game').hidden=false;renderHUD();canvas.focus();}
 $('join-form').onsubmit=async(e)=>{
   e.preventDefault();const button=e.submitter;button.disabled=true;
   try{
-    const data=await request('/api/join',{name:$('name').value,variant:new FormData(e.target).get('variant')});token=data.token;
-    try{localStorage.setItem('fredverse-token',token);}catch{storageOK=false;}
-    $('welcome').close();state=await request('/api/state');renderHUD();canvas.focus();
+    if((session.saved||session.hasStoredData)&&!confirm('Replace your current local world with a new game? Export your save first if you want to keep it.'))return;
+    session.newGame($('name').value,new FormData(e.target).get('variant'));begin();
   }catch(error){$('join-error').textContent=error.message;}finally{button.disabled=false;}
 };
 async function send(){
-  if(!state||busy||performance.now()<retryAt)return;busy=true;
+  if(!state||busy)return;busy=true;
   const modal=activeDialog(), action=actions.shift();
   try{
     await request('/api/input',{keys:modal?[]:[...keys],attack:!modal&&attack,block:!modal&&block,angle:aim,...action});
     state=await request('/api/state');renderHUD();
-    $('connection').textContent='CAMPUS CONNECTED';$('status-light').style.background='#73b6a5';
+    $('connection').textContent=session.status;$('status-light').style.background='#73b6a5';
   }catch(error){
-    retryAt=performance.now()+1500;$('connection').textContent='HOST DISCONNECTED';$('status-light').style.background='#d48a6b';
-    $('speech').textContent=`Connection lost: ${error.message} Reconnecting…`;
-    try{
-      const rejoin=await request('/api/join',{name:state.self.name,variant:state.self.variant});token=rejoin.token;
-      try{localStorage.setItem('fredverse-token',token);}catch{storageOK=false;}
-    }catch{/* Retry on the next poll; do not simulate unsent combat. */}
+    $('connection').textContent='DISCONNECTED';$('status-light').style.background='#d48a6b';
+    $('speech').textContent=error.message+' Open Invite a Fred to exchange fresh codes. No offline combat is being simulated.';
   }finally{busy=false;}
 }
 setInterval(send,80);
@@ -265,10 +271,10 @@ function promptFor(p){
   const [w,h]=sizes[p.zone];if(distance(p,{x:w/2,y:h-35})<90)return 'Leave for campus';
   if(p.zone==='alpha'){
     if(p.quest===0&&distance(p,{x:700,y:230})<135)return 'Recover the remote';
-    if(distance(p,{x:440,y:560})<170)return 'Rest & restock';
+    if(distance(p,{x:440,y:520})<140)return 'Rest & restock';
   }
   if(p.zone==='gym'&&!state.boss&&distance(p,{x:680,y:300})<175)return 'Ready for Three-Point Practice';
-  if(p.zone==='chapel')return 'Speak with The President';
+  if(p.zone==='chapel'&&distance(p,{x:570,y:225})<150)return 'Speak with The President';
   return '';
 }
 function renderHUD(){
@@ -277,9 +283,9 @@ function renderHUD(){
   $('player-name').textContent=p.name;$('variant-name').textContent=p.variant.toUpperCase();$('player-title').textContent=p.title||'A new semester. Same Fred.';$('level').textContent=String(p.level).padStart(2,'0');
   $('hp').value=p.hp;$('hp-text').textContent=`${Math.ceil(p.hp)} / 100`;$('focus').value=p.focus;$('focus-text').textContent=`${Math.floor(p.focus)} / 100`;$('xp').textContent=`${p.xp%120} / 120 XP TO NEXT LEVEL`;
   const q=p.quest;
-  $('quest-title').textContent=q===0?'Personal boundaries':q===1?'An hour early':'Preparation pays off';
-  $('quest-description').textContent=q===0?'Find the remote beside the TV. Some things are not communal property.':q===1?'Bring your gear to Darling Pavilion. Robbie Phillips has a three-point practice challenge.':'Challenge complete. Upgrade at Alpha, try another weapon, or visit The President at Pacific Auditorium.';
-  $('quest-step').querySelector('span').textContent=q===0?'Recover the remote in Alpha':q===1?'Complete Three-Point Practice':`${p.wins} practice${p.wins===1?'':'s'} completed · repeatable`;
+  $('quest-title').textContent=p.chapter?'Prepared for convocation':q===0?'Personal boundaries':q===1?'An hour early':'Preparation pays off';
+  $('quest-description').textContent=p.chapter?'First chapter complete. A familiar campus has more stories to tell. Try another build or practice with friends.':q===0?'Find the remote beside the TV. Some things are not communal property.':q===1?'Bring your gear to Darling Pavilion. Robbie Phillips has a three-point practice challenge.':'Upgrade your gear at Alpha, then meet The President at Pacific Auditorium to finish the chapter.';
+  $('quest-step').querySelector('span').textContent=p.chapter?'Chapter 01 complete · practice remains replayable':q===0?'Recover the remote in Alpha':q===1?'Complete Three-Point Practice':p.upgrade?'Meet The President in the chapel':'Upgrade at the Alpha workbench';
   for(const b of document.querySelectorAll('[data-weapon]'))b.classList.toggle('selected',b.dataset.weapon===p.weapon);
   $('weapon-name').textContent=weaponNames[p.weapon];$('ammo').textContent=p.weapon==='nerf'?p.reload>0?`RELOADING · ${p.reload.toFixed(1)}s`:`${p.ammo} / 8 DARTS · R RELOAD`:p.weapon==='saber'?'QUICK SWINGS · MEDIUM REACH':'HEAVY SWINGS · WIDE ARC';
   $('space-cd').textContent=p.ability_cd>0?p.ability_cd.toFixed(1):'25 F';$('heal-cd').textContent=p.heal_cd>0?p.heal_cd.toFixed(1):`×${p.chips}`;$('dodge-cd').textContent=p.dodge_cd>0?p.dodge_cd.toFixed(1):'12 F';
@@ -289,7 +295,7 @@ function renderHUD(){
   const prompt=promptFor(p);$('prompt').hidden=!prompt;$('prompt').querySelector('span').textContent=prompt;
   $('downed').hidden=p.hp>0;$('recover').disabled=!!boss;$('downed-note').textContent=boss?'Hold on—a teammate can hold E nearby to revive you. All Freds down resets the practice.':'Practice reset. Return to Alpha with your equipment intact.';
   if(p.notice!==notice&&p.notice!==$('speech').dataset.last){notice=p.notice;$('speech').textContent=notice;$('speech').dataset.last=notice;noticeUntil=performance.now()+10000;}
-  $('save-status').textContent=state.save_error?'SAVE FAILED · CHECK HOST':storageOK?'HOST-SAVED PROGRESS':'REJOIN KEY NOT SAVED · BROWSER STORAGE BLOCKED';
+  storageOK=session.storageOK;$('save-status').textContent=session.role==='guest'?'SAVED BY HOST':!storageOK?'MEMORY ONLY · EXPORT YOUR SAVE':state.save_error?'SAVE ERROR · EXPORT BACKUP':'SAVED IN THIS BROWSER';
   const portrait=$('portrait').getContext('2d');portrait.clearRect(0,0,48,64);portrait.imageSmoothingEnabled=false;fred(portrait,p,24,59,0,false,1);
   if($('inventory').open)renderInventory();if($('campus-map').open)renderMap();
 }
@@ -319,11 +325,12 @@ function renderMap(){
 }
 const keyActions={' ':'dodge',q:'space',h:'heal',e:'interact',r:'reload'};
 window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&!activeDialog()&&state){e.preventDefault();showDialog('game-menu');return;}
   if(activeDialog())return;
   const key=e.key.length===1?e.key.toLowerCase():e.key;
   if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))e.preventDefault();
   keys.add(key);if(key==='j')attack=true;if(key==='k')block=true;
-  if(!pointerAim){const dx=Number(keys.has('d'))-Number(keys.has('a')),dy=Number(keys.has('s'))-Number(keys.has('w'));if(dx||dy)aim=Math.atan2(dy,dx);}
+  if(!pointerAim){const dx=Number(keys.has('d')||keys.has('ArrowRight'))-Number(keys.has('a')||keys.has('ArrowLeft')),dy=Number(keys.has('s')||keys.has('ArrowDown'))-Number(keys.has('w')||keys.has('ArrowUp'));if(dx||dy)aim=Math.atan2(dy,dx);}
   if(e.repeat)return;
   if(keyActions[key])queue(keyActions[key]);
   if(['1','2','3'].includes(key))queue('weapon',['nerf','saber','bat'][Number(key)-1]);
@@ -354,4 +361,45 @@ $('sprite-file').onchange=async(e)=>{
   img.onload=()=>{atlas=img;URL.revokeObjectURL(url);$('sprite-status').textContent='Local sprite preview loaded. Equipment overlays and action frames are not yet integrated.';};
   img.onerror=()=>{URL.revokeObjectURL(url);$('sprite-status').textContent='Could not read this image. Use PNG or WebP.';};img.src=url;
 };
+session.paused=()=>!!activeDialog()||document.hidden;
+session.onstate=s=>{state=s;token=session.localToken;if($('welcome').open)$('welcome').close();renderHUD();};
+session.onstatus=text=>{$('connection').textContent=text;$('lan-status').textContent=text;};
+$('continue-game').hidden=!session.saved;
+$('welcome-storage').textContent=session.saveError||'Solo works offline. Co-op uses direct local browser connections.';
+$('continue-game').onclick=()=>{try{session.continueGame();begin();}catch(error){$('join-error').textContent=error.message;}};
+$('menu-open').onclick=$('brand-menu').onclick=()=>showDialog('game-menu');
+$('resume').onclick=()=>$('game-menu').close();
+$('new-game').onclick=()=>{$('game-menu').close();$('continue-game').hidden=!session.saved;showDialog('welcome');};
+$('touch-gear').onclick=()=>showDialog('inventory');
+$('welcome-lan').onclick=()=>showDialog('lan');
+$('pixel-scale').onchange=e=>{pixelScale=Number(e.target.value);resize();};
+$('smooth-camera').onchange=e=>smoothCamera=e.target.checked;
+function download(name,content,type){const url=URL.createObjectURL(new Blob([content],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('export-save').onclick=()=>{try{download('The-Fred-Verse-save.json',session.exportSave(),'application/json');$('menu-status').textContent='Save exported. Keep it private: it includes your world and guest rejoin keys.';}catch(error){$('menu-status').textContent=error.message;}};
+$('import-save').onclick=$('welcome-import').onclick=()=>$('import-file').click();
+$('import-file').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{
+    if(f.size>1024*1024)throw Error('Save file is too large (maximum 1 MB).');
+    const data=await f.text();FredCore.validateSave(JSON.parse(data));
+    if((session.saved||session.role==='guest')&&!confirm('Replace local progress and close existing connections with this imported world? Export a backup first.'))return;
+    session.importSave(data);$('game-menu').close();$('lan').close();begin();$('speech').textContent='Save imported at Alpha. Health and gear preserved.';
+  }catch(error){$('menu-status').textContent=error.message;$('join-error').textContent=error.message;$('welcome-storage').textContent=error.message;}
+  finally{e.target.value='';}
+};
+function downloadGame(){
+  if(globalThis.FRED_STANDALONE)download('The-Fred-Verse.html',pristineHTML,'text/html');
+  else{const a=document.createElement('a');a.href='../The-Fred-Verse.html';a.download='The-Fred-Verse.html';a.click();}
+}
+$('download-game').onclick=$('welcome-download').onclick=downloadGame;
+async function lanTask(button,task){button.disabled=true;try{await task();}catch(error){$('lan-status').textContent=error.message;}finally{button.disabled=false;}}
+$('create-invite').onclick=e=>lanTask(e.currentTarget,async()=>{$('invite-output').value=await session.invite();});
+$('create-reply').onclick=e=>lanTask(e.currentTarget,async()=>{
+  if(session.world&&session.role!=='guest'&&!confirm('Join your friend’s world? Your solo world will be saved first.'))return;
+  $('reply-output').value=await session.answer($('invite-input').value,$('guest-name').value,$('guest-variant').value);
+});
+$('accept-reply').onclick=e=>lanTask(e.currentTarget,()=>session.accept($('reply-input').value));
+$('leave-session').onclick=()=>{session.leave();$('invite-output').value=$('reply-output').value='';if(session.world)begin();else{state=null;showDialog('welcome');}};
+document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const source=$(b.dataset.copy);source.focus();source.select();try{await navigator.clipboard.writeText(source.value);$('lan-status').textContent='Code copied. Send the whole code privately.';}catch{$('lan-status').textContent='Code selected. Use Copy / Ctrl+C, then send it privately.';}});
+window.addEventListener('pagehide',()=>{session.persist();});
 resize();requestAnimationFrame(paint);$('welcome').showModal();

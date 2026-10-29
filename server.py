@@ -511,7 +511,7 @@ def main():
     threading.Thread(target=advertise, args=(args.port, stop), daemon=True).start()
     print(f'The Fred Verse listening on {args.host}:{args.port}. LAN friends open this machine’s IP on port {args.port}.', flush=True)
     if args.open:
-        threading.Timer(.8, webbrowser.open, args=(f'http://127.0.0.1:{args.port}',)).start()
+        threading.Timer(.8, webbrowser.open, args=(f'http://127.0.0.1:{args.port}/legacy/',)).start()
     try:
         server.serve_forever()
     except KeyboardInterrupt:

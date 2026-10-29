@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#141e26"><title>The Fred Verse</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%2317232b'/%3E%3Ctext x='10' y='30' font-size='30' fill='%23d4b86e'%3EF%3C/text%3E%3C/svg%3E">
+  <style>@font-face{font-family:system;src:local('Trebuchet MS')}*{box-sizing:border-box} :root{color-scheme:dark;--ink:#dce1d6;--muted:#8b9d9e;--gold:#d4b86e;--panel:#17232b;--line:#304048;--teal:#73b6a5}body{margin:0;background:#101a21;color:var(--ink);font:14px system,Arial,sans-serif}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer;border:1px solid var(--line);border-radius:5px;background:#24343d;color:var(--ink);padding:10px 14px}button:hover{border-color:var(--gold);color:#fff}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:2px solid var(--gold);outline-offset:3px}button:disabled{opacity:.45;cursor:default}header{height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border-bottom:1px solid var(--line);gap:20px}.brand{display:flex;gap:13px;align-items:center;text-decoration:none;color:var(--ink);font-weight:900;letter-spacing:2px;font-size:16px}.brand small{display:block;color:var(--muted);font-size:8px;letter-spacing:2px;margin-top:6px;font-weight:400}.crest{font-family:Georgia,serif;font-size:28px;border:1px solid var(--gold);color:var(--gold);padding:4px 8px;position:relative;line-height:30px}.crest span{font-size:14px;vertical-align:sub;margin-left:-4px}.session{display:flex;align-items:center;gap:10px;letter-spacing:1.5px;font-size:10px;color:var(--muted)}.session i{width:6px;height:6px;background:var(--teal);border-radius:50%}.version{border:1px solid var(--line);padding:6px 8px;margin-left:10px;color:var(--gold)}.quiet{background:transparent}.quiet span{margin-left:8px}.eyebrow{font-size:9px;letter-spacing:2px;color:var(--gold);font-weight:bold}main{display:grid;grid-template-columns:minmax(0,1fr) 302px;height:calc(100dvh - 82px);min-height:620px} .viewport{position:relative;overflow:hidden;background:#687951}#world{display:block;width:100%;height:100%;image-rendering:pixelated;touch-action:none;outline:none}.location{position:absolute;top:27px;left:28px;pointer-events:none;color:#fff;text-shadow:0 2px 5px #14221c}.location h1{font-family:Georgia,serif;font-weight:400;font-size:28px;margin:7px 0 5px}.location #area-note{font-size:11px;color:#e3e5cf}.map-button{position:absolute;right:22px;top:28px;background:#15252ce8;border-color:#66716a;display:flex;align-items:center;gap:12px;font-size:12px}.map-button>span{display:none}kbd{font:10px system,Arial,sans-serif;border:1px solid #5b6970;border-radius:3px;padding:3px 5px;color:#b7c3bc;min-width:20px;text-align:center}.scene-caption{position:absolute;bottom:12px;left:20px;font-size:8px;letter-spacing:1.2px;color:#e4e4c7;text-shadow:1px 1px #14221c;pointer-events:none}.hotbar{position:absolute;bottom:35px;left:50%;transform:translateX(-50%);display:flex;gap:5px}.hotbar button{width:94px;height:78px;position:relative;padding:9px 4px 7px;background:#17232bea;border-color:#5c6b64;box-shadow:0 3px 10px #0004}.hotbar kbd{position:absolute;top:5px;left:5px;font-size:8px}.hotbar button>span{display:block;font-family:Georgia,serif;font-size:30px;line-height:33px;color:var(--gold)}.hotbar small{display:block;font-size:9px;color:#c8d0bf}.hotbar em{position:absolute;top:5px;right:7px;font-size:10px;font-style:normal;color:var(--gold)}.speech{position:absolute;bottom:132px;left:50%;transform:translateX(-50%);width:min(540px,85%);padding:13px 17px;background:#142129ed;border-left:2px solid var(--gold);font-size:12px;line-height:1.6;box-shadow:0 4px 20px #0003;pointer-events:none}.speech:empty{display:none}.prompt{position:absolute;top:64%;left:50%;transform:translateX(-50%);padding:10px 16px;background:#102027e8;white-space:nowrap;border:1px solid #7b8b80;border-radius:5px;font-size:12px}.prompt kbd{margin-right:10px}aside{background:var(--panel);border-left:1px solid var(--line);padding:24px 22px 0;overflow:auto;display:flex;flex-direction:column}aside section{padding-bottom:22px;margin-bottom:22px;border-bottom:1px solid var(--line)}.character{display:flex;align-items:center;gap:13px}.character h2{font-family:Georgia,serif;font-size:25px;font-weight:400;margin:5px 0}.character small{font-size:9px;color:var(--muted)}.avatar{background:#293b42;border:1px solid #52615b;width:50px;height:65px;flex-shrink:0}.avatar canvas{image-rendering:pixelated}.character .eyebrow{font-size:8px}.level{align-self:flex-start;margin-left:auto;color:var(--gold);font-family:Georgia,serif;font-size:22px}.vitals>div{display:flex;justify-content:space-between;font-size:9px;letter-spacing:1px;margin:0 0 6px}.vitals b{font-size:10px;font-weight:400;color:var(--muted)}progress{display:block;width:100%;height:6px;appearance:none;border:0;background:#34444a;overflow:hidden;border-radius:0}progress::-webkit-progress-bar{background:#34444a}progress::-webkit-progress-value{background:var(--teal)}progress::-moz-progress-bar{background:var(--teal)}#hp{margin-bottom:13px}#focus::-webkit-progress-value{background:#8eabcb}#focus::-moz-progress-bar{background:#8eabcb}.vitals>small{display:block;color:var(--muted);font-size:8px;letter-spacing:1px;margin-top:14px}.section-label{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:9px;letter-spacing:1.5px}.section-label>span{font-size:9px;letter-spacing:1px;color:var(--gold)}.quest h3{font-family:Georgia,serif;font-weight:400;font-size:21px;margin:14px 0 9px}.quest p{font-size:12px;line-height:1.8;color:#a7b7b6;margin:0 0 15px}#quest-step{font-size:10px;display:flex;align-items:center;gap:9px}#quest-step i{width:7px;height:7px;border:1px solid var(--gold);transform:rotate(45deg);flex-shrink:0}.text-button{padding:0;background:transparent;border:0;color:var(--gold);font-size:10px;letter-spacing:0}.text-button kbd{font-size:8px;padding:1px 4px;margin-left:5px}.weapons{display:flex;gap:7px;margin-top:15px}.weapons button{position:relative;flex:1;height:72px;padding:8px 3px;background:#1c2b33;border-color:#3a4a50}.weapons kbd{position:absolute;top:5px;left:5px;border:0;padding:0;font-size:8px;min-width:8px}.weapons button>span{display:block;font-size:27px;height:35px;color:#9aaba6}.weapons b{font-size:9px;font-weight:400}.weapons .selected{border-color:var(--gold);background:#333b35}.weapons .selected>span{color:var(--gold)}.weapon-detail{margin-top:10px;display:flex;flex-direction:column;gap:7px;font-size:11px}.weapon-detail small{font-size:8px;color:var(--muted);letter-spacing:1px}.party{margin-bottom:0!important;border:0!important;flex:1}.party-row{display:flex;align-items:center;gap:9px;margin:14px 0;font-size:11px}.party-row i{width:6px;height:6px;background:var(--teal);border-radius:50%}.party-row span{flex:1}.party-row small{color:var(--muted);font-size:9px}.lan-button{margin-top:10px;width:100%;font-size:11px;background:transparent;text-align:left}.lan-button span{float:right;font-size:8px;color:var(--muted);padding-top:2px}footer{border-top:1px solid var(--line);min-height:41px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:8px;letter-spacing:.8px;color:var(--muted)}dialog{background:#17232b;color:var(--ink);border:1px solid #536158;border-radius:8px;box-shadow:0 20px 90px #0008;max-height:90dvh;width:min(540px,94vw);padding:35px;line-height:1.7}dialog::backdrop{background:#091319c9;backdrop-filter:blur(5px)}dialog h2{font-family:Georgia,serif;font-size:34px;font-weight:400;line-height:1.2;margin:12px 0 18px}dialog p{font-size:13px;color:#b0c0bc}dialog .muted{font-size:11px;color:var(--muted)}.close{position:absolute;right:14px;top:10px;background:transparent;border:0;font-size:25px;padding:0 8px}.welcome{width:490px;padding:40px}.welcome h2{font-size:64px;letter-spacing:-3px;line-height:.94;margin-top:20px}.welcome h2 span{color:var(--gold)}.welcome>p{margin:22px 0;line-height:1.8}label{display:block;font-size:9px;letter-spacing:1px;color:var(--muted)}input:not([type=radio]),select{display:block;background:#22323a;border:1px solid var(--line);border-radius:4px;padding:12px;color:var(--ink);width:100%;margin:7px 0 15px;font-size:14px}fieldset{border:0;margin:20px 0;padding:0;display:flex;gap:9px}legend{font-size:9px;letter-spacing:1px;color:var(--muted);margin-bottom:10px}.variant-option{width:50%;padding:12px;border:1px solid var(--line);border-radius:4px;cursor:pointer;letter-spacing:0}.variant-option:has(:checked){border-color:var(--gold);background:#333b35}.variant-option strong{font-size:13px;color:var(--ink);display:inline-block;margin:0 0 5px 4px}.variant-option small{display:block;font-size:9px;line-height:1.6}.variant-option input{accent-color:var(--gold)}.primary{width:100%;background:var(--gold);border-color:var(--gold);color:#17232b;font-weight:bold;padding:14px;margin:4px 0 10px}.primary:hover{background:#e6cd8c;color:#17232b}.primary span{float:right}.disclaimer{color:var(--muted);font-size:8px;line-height:1.8;display:block;letter-spacing:.4px}.welcome #join-error{color:#e1a291;font-size:12px;margin:0 0 10px}dl{display:grid;grid-template-columns:1fr 1.2fr;font-size:11px;gap:10px 14px}dt{color:var(--gold)}dd{margin:0}.gear-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--line)}.gear-row>div{flex:1}.gear-row b{font-size:12px}.gear-row small{display:block;font-size:10px;color:var(--muted)}.gear-row button{font-size:10px}.set-bonus{border-left:2px solid var(--teal);padding:10px 15px;background:#223831;color:var(--teal);font-size:11px}#map{width:100%;height:auto;image-rendering:pixelated;border:1px solid #536158}#boss-hud{position:absolute;top:100px;left:50%;transform:translateX(-50%);width:min(500px,85%);background:#17232bdb;padding:12px 16px}#boss-hud>div{display:flex;justify-content:space-between;font-size:11px;margin-bottom:9px;gap:8px}#boss-hud small{font-size:7px;letter-spacing:1.5px;color:#bda49a;display:block;margin-top:7px}#boss-health::-webkit-progress-value{background:#d88a75}#boss-health::-moz-progress-bar{background:#d88a75}#downed{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);background:#17232bf0;padding:25px;text-align:center;border:1px solid #bb9c79;width:min(400px,90%)}#downed h2{font-family:Georgia,serif;font-size:30px;font-weight:400}#downed p{font-size:12px;line-height:1.7}.touch-move,.touch-actions{display:none}code{font-size:11px;color:var(--gold);overflow-wrap:anywhere} [hidden]{display:none!important}
+@media(min-width:1500px){main{grid-template-columns:minmax(0,1fr) 330px}.map-button>span{display:inline}.location{left:40px;top:35px}aside{padding:30px 26px 0}.character{margin-bottom:28px}}
+@media(max-height:820px) and (min-width:801px){main{min-height:560px}aside{padding:18px 18px 0}aside section{padding-bottom:16px;margin-bottom:16px}.quest p{line-height:1.5}.character .avatar{height:58px;overflow:hidden}.party-row{margin:10px 0}.hotbar{bottom:30px}}
+@media(max-width:800px){header{height:65px;padding:0 16px}.brand{font-size:12px;letter-spacing:1px}.brand small{font-size:7px}.crest{font-size:24px}.session{display:none}.quiet span{display:none}main{height:auto;min-height:0;display:flex;flex-direction:column}.viewport{height:calc(100dvh - 65px);min-height:520px}.location{left:17px;top:18px}.location h1{font-size:22px}.location #area-note{font-size:9px}.location .eyebrow{font-size:7px}.map-button{top:19px;right:15px;padding:7px 10px}.map-button kbd{display:none}aside{border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:20px}aside section{margin:0;padding:0 0 16px}.party,footer{grid-column:1/-1}.touch-move{display:block;position:absolute;bottom:45px;left:14px;text-align:center;touch-action:none}.touch-move button{padding:13px 15px;background:#17232bdd;touch-action:none}.touch-move>button{margin-bottom:3px}.touch-move>div{display:flex;gap:3px}.touch-actions{display:flex;position:absolute;right:12px;bottom:45px;flex-direction:column;gap:5px;touch-action:none}.touch-actions button{padding:10px;font-size:10px;background:#17232bdd;touch-action:none}.hotbar{bottom:45px;gap:3px}.hotbar button{width:58px;height:60px}.hotbar kbd{display:none}.hotbar small{font-size:7px}.hotbar button>span{font-size:24px;line-height:25px}.speech{bottom:180px;font-size:11px}.scene-caption{font-size:6px;bottom:14px;left:15px}dialog{padding:28px}.welcome h2{font-size:54px}#boss-hud{top:95px}.prompt{top:60%;font-size:10px}.prompt kbd{display:none}}
+@media(pointer:fine) and (min-width:801px){.touch-move,.touch-actions{display:none}}
+@media(max-width:800px){.touch-move,.touch-actions{bottom:112px}.hotbar{bottom:30px}.speech{bottom:225px}.prompt{top:auto;bottom:200px;max-width:90%;white-space:normal;text-align:center}}
+@media(prefers-reduced-motion:reduce){dialog::backdrop{backdrop-filter:none}}
+/* Browser-only edition */
+.brand{border:0;background:transparent;padding:0;text-align:left}.brand:hover{color:var(--ink)}.header-controls{display:flex;gap:8px}.welcome-extras{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.welcome-extras button{font-size:10px;padding:8px 10px;flex:1}.menu-buttons{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}textarea{display:block;width:100%;background:#22323a;border:1px solid var(--line);border-radius:4px;color:var(--ink);font:10px monospace;padding:10px;margin:8px 0;resize:vertical;word-break:break-all}details{margin:18px 0;padding:12px;border:1px solid var(--line);border-radius:4px}summary{cursor:pointer;color:var(--gold);font-size:13px}details label{margin-top:14px}#lan-status,#menu-status{color:var(--gold);font-size:12px;overflow-wrap:anywhere}.touch-weapons,.touch-extra{display:flex;gap:3px}.touch-weapons button,.touch-extra button{flex:1}.touch-weapons .selected{border-color:var(--gold);color:var(--gold)}#game-menu label:has(input[type=checkbox]){display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:0}.touch-actions .touch-weapons button{padding:7px 8px}.touch-actions .touch-extra button{padding:7px 6px}@media(max-width:800px){header{gap:8px}.header-controls{gap:4px}.header-controls button{padding:9px 10px}.brand small{letter-spacing:1px}.touch-actions{min-width:87px}.touch-actions>button{padding:9px 8px}.hotbar{bottom:24px}.hotbar button{width:70px}#lan,#game-menu{max-height:85dvh}.scene-caption{font-size:5px}.touch-move button{padding:14px}.touch-move{bottom:115px}.touch-actions{bottom:105px}.speech{bottom:295px}.prompt{bottom:265px}.version{margin-left:0}}
+</style>
+</head>
+<body>
+  <header>
+    <button class="brand" id="brand-menu" aria-label="The Fred Verse menu"><span class="crest">F<span>V</span></span><span>THE FRED VERSE<small>HOPE INTERNATIONAL · FULLERTON</small></span></button>
+    <div class="session"><i id="status-light"></i><span id="connection">OFFLINE SOLO</span><span class="version">ALPHA 0.2</span></div>
+    <div class="header-controls"><button id="help-open" class="quiet">? <span>Field guide</span></button><button id="menu-open" class="quiet">☰ <span>Menu</span></button></div>
+  </header>
+  <main>
+    <section class="viewport" aria-label="Game world">
+      <canvas id="world" tabindex="0" aria-label="Campus game. Use WASD to move, E to interact. See Field guide for all controls."></canvas>
+      <div class="location"><span class="eyebrow">FULLERTON, CALIFORNIA</span><h1 id="location">Alpha Residence Hall</h1><span id="area-note">A little preparation goes a long way.</span></div>
+      <div id="boss-hud" hidden><div><b id="boss-name"></b><span id="boss-phase"></span></div><progress id="boss-health" max="100" value="100"></progress><small>FICTIONAL FACULTY PRACTICE · NONLETHAL</small></div>
+      <button id="map-open" class="map-button" title="Campus map (M)">⌖ <span>Campus map</span> <kbd>M</kbd></button>
+      <div id="speech" class="speech" aria-live="polite"></div>
+      <div id="prompt" class="prompt" hidden><kbd>E</kbd><span></span></div>
+      <div id="downed" hidden><h2>Five more minutes.</h2><p id="downed-note">Your equipment is safe.</p><button id="recover">Return to Alpha</button></div>
+      <div class="hotbar">
+        <button data-action="space" title="Personal Space (Q)"><kbd>Q</kbd><span>◎</span><small>Personal Space</small><em id="space-cd"></em></button>
+        <button data-action="heal" title="Emergency Chips (H)"><kbd>H</kbd><span>▱</span><small>Emergency Chips</small><em id="heal-cd"></em></button>
+        <button data-action="dodge" title="Dodge (Space)"><kbd>␣</kbd><span>»</span><small>Early to Class</small><em id="dodge-cd"></em></button>
+      </div>
+      <div class="touch-move" aria-label="Movement controls"><button data-key="w" aria-label="Move up">▲</button><div><button data-key="a" aria-label="Move left">◀</button><button data-key="s" aria-label="Move down">▼</button><button data-key="d" aria-label="Move right">▶</button></div></div>
+      <div class="touch-actions"><div class="touch-weapons" aria-label="Choose weapon"><button data-weapon="nerf" aria-label="Equip Nerf">1</button><button data-weapon="saber" aria-label="Equip saber">2</button><button data-weapon="bat" aria-label="Equip bat">3</button></div><button id="touch-attack">Attack</button><button data-action="interact">Interact</button><div class="touch-extra"><button data-action="reload" aria-label="Reload">R</button><button id="touch-gear" aria-label="Equipment">Gear</button></div><button id="touch-block">Guard</button></div>
+      <span class="scene-caption">HIU-INSPIRED RECONSTRUCTION · APPROXIMATE INTERIORS</span>
+    </section>
+    <aside>
+      <section class="character"><div class="avatar"><canvas id="portrait" width="48" height="64"></canvas></div><div><span class="eyebrow" id="variant-name">DORM FRED</span><h2 id="player-name">Fred</h2><small id="player-title">A new semester. Same Fred.</small></div><span id="level" class="level">01</span></section>
+      <section class="vitals"><div><span>HEALTH</span><b id="hp-text">100 / 100</b></div><progress id="hp" max="100" value="100"></progress><div><span>FOCUS</span><b id="focus-text">100 / 100</b></div><progress id="focus" max="100" value="100"></progress><small id="xp">0 / 120 XP TO NEXT LEVEL</small></section>
+      <section class="quest"><div class="section-label">CAMPUS JOURNAL <span>01</span></div><h3 id="quest-title">Personal boundaries</h3><p id="quest-description">Find the remote beside the TV. Some things are not communal property.</p><div id="quest-step"><i></i><span>Recover the remote in Alpha</span></div></section>
+      <section class="loadout"><div class="section-label">THE LOADOUT <button id="inventory-open" class="text-button">Gear <kbd>I</kbd></button></div><div class="weapons"><button data-weapon="nerf"><kbd>1</kbd><span>⌁</span><b>Nerf</b></button><button data-weapon="saber"><kbd>2</kbd><span>╱</span><b>Saber</b></button><button data-weapon="bat"><kbd>3</kbd><span>╿</span><b>Bat</b></button></div><div class="weapon-detail"><span id="weapon-name">Owen’s Sidearm</span><small id="ammo">8 / 8 DARTS · R RELOAD</small></div></section>
+      <section class="party"><div class="section-label">FREDS ON CAMPUS <span id="party-count">1 / 4</span></div><div id="party-list"></div><button id="lan-open" class="lan-button">↗ Invite a Fred <span>LAN CO-OP</span></button></section>
+      <footer><span id="save-status">HOST-SAVED PROGRESS</span><button id="sprite-open" class="text-button">Sprite</button></footer>
+    </aside>
+  </main>
+  <dialog id="welcome" class="welcome">
+    <span class="eyebrow">A CAMPUS-SIZED ADVENTURE</span><h2>The Fred<br><span>Verse.</span></h2>
+    <p>Same campus. Different Freds.<br>Prepare at Alpha. Find your build. Take on the challenge.</p>
+    <button id="continue-game" class="primary" hidden>Continue your Fred →</button>
+    <form id="join-form"><label>YOUR NAME<input id="name" maxlength="24" value="Fred" required autocomplete="nickname"></label>
+      <fieldset><legend>CHOOSE YOUR FRED</legend><label class="variant-option"><input type="radio" name="variant" value="Dorm Fred" checked><strong>Dorm Fred</strong><small>Personal Space · longer party shield</small></label><label class="variant-option"><input type="radio" name="variant" value="MLB Fred"><strong>MLB Fred</strong><small>Walk-Off · stronger baseball swings</small></label></fieldset>
+      <button type="submit" class="primary">New game <span>→</span></button><p id="join-error" role="alert"></p>
+    </form><div class="welcome-extras"><button id="welcome-lan">Join a Fred</button><button id="welcome-import">Import save</button><button id="welcome-download">Download HTML</button></div><p id="welcome-storage" class="muted"></p><small class="disclaimer">OFFLINE SOLO · BROWSER-TO-BROWSER CO-OP · NO INSTALLS<br>Original fictional RPG. Not an official HIU game. Art and layouts are provisional.</small>
+  </dialog>
+  <dialog id="guide"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">KNOW YOUR CAMPUS</span><h2>The field guide</h2><p>Every player is a Fred. Everyone can complete this slice solo.</p><dl><dt>WASD / arrows</dt><dd>Move</dd><dt>Mouse / movement direction</dt><dd>Aim / touch aim</dd><dt>Left click / J</dt><dd>Attack (hold to repeat)</dd><dt>Right click / K</dt><dd>Guard; reduces incoming damage</dd><dt>Space · Q · H</dt><dd>Dodge · Personal Space · heal</dd><dt>1 / 2 / 3 · R</dt><dd>Nerf / saber / bat · reload</dd><dt>E / hold E</dt><dd>Interact / revive a downed Fred nearby</dd><dt>I · M</dt><dd>Equipment · campus map</dd></dl><p><b>First steps:</b> find the remote beside the dorm TV, exit south, and follow the map to Darling Pavilion. Approach the practice marker and press E. All Freds in the gym must be ready; solo starts immediately.</p><p>Red outlined circles are practice hazards. Teal circles help teammates. Guard or dodge telegraphs; your attacks never hurt another Fred. A downed Fred can be revived by a teammate holding E while still for 2.5 seconds. Solo defeat resets the practice so you can recover.</p><p class="muted">Royal Arts is a provisional name for fictional equipment abilities. Faith is not a stat; prayer and Scripture are not combat resources.</p></dialog>
+  <dialog id="inventory"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">STREETWEAR, WITH STATS</span><h2>The dorm wardrobe</h2><p id="gear-stats"></p><div id="gear-list"></div><p class="set-bonus">PERSONAL SPACE · 2 PIECES<br><small>Successful guards grant a brief shield. Helpful solo and together.</small></p><button id="upgrade" class="primary">Workbench upgrade · 3 materials</button><p id="materials"></p><label>DISPLAY TITLE<select id="title-select"></select></label></dialog>
+  <dialog id="campus-map"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">N ↑ · NOT TO SCALE</span><h2>Find your way.</h2><canvas id="map" width="560" height="560" aria-label="Campus map showing your position and labeled buildings"></canvas><p class="muted">Map-relative exterior. Alpha, gym, and chapel are enterable in this slice. Other interiors are reserved for later chapters.</p></dialog>
+  <dialog id="lan"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">DIRECT BROWSER-TO-BROWSER · 1–4 FREDS</span><h2>Bring your variant.</h2><p>Open the game on both devices on the same local network. No Python, accounts, relay, or short-code service. One browser hosts the shared simulation; keep it open and in the foreground.</p><p class="muted">Experimental: browser co-op needs testing on normal LAN devices. This build's cloud test browser blocks direct peer networking. Solo has passed the complete chapter test.</p>
+    <details open><summary>1 · Host: make an invite</summary><p>Start or continue a game, then create one invite per friend. Send the entire code privately. Codes expire after two minutes before connection.</p><button id="create-invite">Create invite</button><label>INVITE CODE<textarea id="invite-output" readonly rows="3"></textarea></label><button data-copy="invite-output">Copy invite</button><label>PASTE YOUR FRIEND’S REPLY<textarea id="reply-input" rows="3" maxlength="150000"></textarea></label><button id="accept-reply" class="primary">Accept reply</button></details>
+    <details><summary>2 · Guest: answer an invite</summary><label>YOUR NAME<input id="guest-name" maxlength="24" value="Fred"></label><label>FRED VARIANT<select id="guest-variant"><option>Dorm Fred</option><option>MLB Fred</option></select></label><label>PASTE THE HOST’S INVITE<textarea id="invite-input" rows="3" maxlength="150000"></textarea></label><button id="create-reply">Create reply</button><label>REPLY TO SEND BACK<textarea id="reply-output" readonly rows="3"></textarea></label><button data-copy="reply-output">Copy reply</button><p>Send the entire reply to the host and wait for them to accept it. The host owns your character save. This browser remembers its private rejoin key; fresh connection codes are required after disconnecting.</p></details>
+    <p id="lan-status" role="status"></p><button id="leave-session">Close connections / return to solo</button><p class="muted">This uses local WebRTC candidates without STUN/TURN or automatic LAN discovery. Some networks and browsers block direct connections. If a downloaded file cannot connect, use the HTTPS-hosted game in current Chrome, Edge or Firefox. Different networks are not supported by this baseline. Never paste connection codes into public posts.</p>
+  </dialog>
+  <dialog id="game-menu"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">TAKE A BREATHER</span><h2 id="pause-heading">Paused.</h2><p id="pause-note">Solo pauses while a menu is open. In co-op, the world keeps running.</p><div class="menu-buttons"><button id="resume" class="primary">Back to campus</button><button id="export-save">Export save</button><button id="import-save">Import save</button><button id="download-game">Download this HTML</button><button id="new-game">New game / choose Fred</button></div><label>PIXEL SCALE<select id="pixel-scale"><option value="2">2× · crisp pixels</option><option value="3">3× · closer view</option><option value="1">1× · see more campus</option></select></label><label><input type="checkbox" id="smooth-camera" checked> Smooth camera</label><p id="menu-status" role="status"></p><p class="muted">Local saves stay in this browser and address. Export a backup to move devices or addresses. Imports resume at Alpha with health preserved; interrupted practice resets. Guest progress belongs to the host; guest-only export is unavailable.</p></dialog>
+  <input id="import-file" type="file" accept="application/json,.json" hidden>
+  <dialog id="sprite"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">ART WORK IN PROGRESS</span><h2>Fred, frame by frame.</h2><p>The built-in pixel Fred is a placeholder. To preview the sprite sheet you shared, choose its PNG file. It stays in this browser session and is not uploaded to the host.</p><label>SPRITE SHEET<input id="sprite-file" type="file" accept="image/png,image/webp"></label><p class="muted">Preview expects 10 columns; the first five directional rows have equal height. Full action animation and final atlas integration remain unfinished.</p><p id="sprite-status" role="status"></p></dialog>
+<script>globalThis.FRED_STANDALONE=true;</script>
+<script>
+/* One simulation for offline solo and the authoritative WebRTC host. No DOM or network. */
+(() => {
+  'use strict';
+  const WEAPONS = {
+    nerf:{name:"Owen's Sidearm",damage:12,cooldown:.32,range:460},
+    saber:{name:"Owen's Blue Blade",damage:19,cooldown:.38,range:86},
+    bat:{name:'MLB Prospect',damage:34,cooldown:.85,range:110},
+  };
+  const GEAR={hoodie:{slot:'body',defense:3,set:'space'},jersey:{slot:'body',defense:1,power:4},
+    shoes:{slot:'shoes',defense:2,set:'space'},chain:{slot:'accessory',defense:2,set:'space'}};
+  const BUILDINGS=[
+    ['west','Nutwood West',800,180,250,160],['chapel','Pacific Auditorium',1370,170,290,185],
+    ['library','Darling Library',1080,400,240,210],['east','Nutwood East',1430,640,235,165],
+    ['gym','Darling Pavilion',980,930,350,240],['hub','Lawson-Fulton Center',1000,1260,320,190],
+    ['omega','Omega Residence Hall',280,860,300,200],['alpha','Alpha Residence Hall',280,1440,300,220],
+  ];
+  const ZONES={campus:[1920,1920],alpha:[880,660],gym:[1360,1000],chapel:[1140,1100]};
+  const OBSTACLES={campus:[...BUILDINGS.map(b=>b.slice(2)),[300,1150,260,150]],
+    alpha:[[50,85,175,190],[50,340,175,190],[640,80,170,80],[650,320,150,115],[350,60,150,55]],
+    gym:[[60,110,100,740],[1200,110,100,740]],
+    chapel:[...Array.from({length:7},(_,i)=>330+i*85).flatMap(y=>[[100,y,280,40],[730,y,280,40]]),[160,65,820,130]]};
+  const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+  const clone=o=>JSON.parse(JSON.stringify(o));
+  function id(){const a=new Uint8Array(24);globalThis.crypto.getRandomValues(a);return Array.from(a,x=>x.toString(16).padStart(2,'0')).join('');}
+  function solid(zone,x,y){const [w,h]=ZONES[zone];return x<22||y<42||x>w-22||y>h-22||OBSTACLES[zone].some(([a,b,c,d])=>x>a-13&&x<a+c+13&&y>b-10&&y<b+d+10);}
+  function fresh(name,variant){return {name,variant,zone:'alpha',x:440,y:520,hp:100,focus:100,xp:0,level:1,materials:0,upgrade:0,
+    weapon:variant==='Dorm Fred'?'nerf':'bat',gear:['hoodie','jersey','shoes'],equipped:{body:variant==='Dorm Fred'?'hoodie':'jersey',shoes:'shoes'},
+    titles:[],title:'',quest:0,wins:0,chapter:0,chips:3,ammo:8,angle:-Math.PI/2,online:false,seen:0,input:{},swing:0,invuln:0,
+    shield:0,attack_cd:0,dodge_cd:0,heal_cd:0,ability_cd:0,reload:0,revive:0,revive_time:0,ready:false,
+    notice:'Find the remote beside the TV, northeast of the rest bench. E to interact. The bed is off limits.'};}
+  const numeric={hp:[0,100],focus:[0,100],xp:[0,1e8],materials:[0,1e6],upgrade:[0,5],quest:[0,2],wins:[0,1e6],chapter:[0,1],chips:[0,3],ammo:[0,8]};
+  function validateSave(data){
+    if(!data||typeof data!=='object'||data.game!=='The Fred Verse'||data.version!==2)throw Error('Not a supported Fred Verse browser save (version 2). Your current game was not changed.');
+    if(!Array.isArray(data.players)||data.players.length<1||data.players.length>100)throw Error('Save must contain 1–100 Freds.');
+    if(!Number.isInteger(data.encounters)||data.encounters<0||data.encounters>1e8)throw Error('Invalid encounter history.');
+    const tokens=new Set();
+    const players=data.players.map(entry=>{
+      if(!entry||typeof entry.token!=='string'||!/^[a-f0-9]{48}$/.test(entry.token)||tokens.has(entry.token))throw Error('Invalid or duplicate character key.');
+      tokens.add(entry.token);const p=entry.character;
+      if(!p||typeof p.name!=='string'||p.name.trim().length<1||p.name.length>24||!['Dorm Fred','MLB Fred'].includes(p.variant))throw Error('Invalid Fred identity.');
+      const q=fresh(p.name.trim(),p.variant);
+      for(const [key,[min,max]] of Object.entries(numeric)){
+        const value=p[key]??(key==='chapter'?0:undefined);
+        if(typeof value!=='number'||!Number.isFinite(value)||value<min||value>max||(key!=='hp'&&key!=='focus'&&!Number.isInteger(value)))throw Error('Invalid saved '+key+'.');
+        q[key]=value;
+      }
+      if(!Object.hasOwn(WEAPONS,p.weapon)||!Array.isArray(p.gear)||p.gear.length>4||!p.gear.every(g=>typeof g==='string'&&Object.hasOwn(GEAR,g))||new Set(p.gear).size!==p.gear.length)throw Error('Invalid saved gear.');
+      q.weapon=p.weapon;q.gear=[...p.gear];q.equipped={};
+      if(!p.equipped||typeof p.equipped!=='object'||Array.isArray(p.equipped)||Object.keys(p.equipped).length>3)throw Error('Invalid equipment.');
+      for(const [slot,g] of Object.entries(p.equipped)){
+        if(!q.gear.includes(g)||GEAR[g].slot!==slot)throw Error('Equipment is not owned or has the wrong slot.');q.equipped[slot]=g;
+      }
+      if(!Array.isArray(p.titles)||p.titles.length>2||!p.titles.every(t=>['An Hour Early','Prepared for Convocation'].includes(t))||new Set(p.titles).size!==p.titles.length||typeof p.title!=='string'||(p.title&&!p.titles.includes(p.title)))throw Error('Invalid title.');
+      q.titles=[...p.titles];q.title=p.title;q.level=1+Math.floor(q.xp/120);
+      // Resume in a safe place, preserve health and progression, discard transient encounter state.
+      q.notice='Save restored at Alpha. Health and gear preserved; interrupted practice has reset.';
+      return {token:entry.token,character:q};
+    });
+    if(!tokens.has(data.localToken))throw Error('Save has no matching local Fred.');
+    if(typeof data.worldId!=='string'||!/^[a-f0-9]{48}$/.test(data.worldId))throw Error('Invalid world identity.');
+    return {game:data.game,version:2,worldId:data.worldId,encounters:data.encounters,localToken:data.localToken,players};
+  }
+  class World{
+    constructor(){this.players=new Map();this.boss=null;this.projectiles=[];this.effects=[];this.clock=0;this.encounters=0;this.worldId=id();this.dirty=false;}
+    static load(data){const valid=validateSave(data),w=new World();w.worldId=valid.worldId;w.encounters=valid.encounters;for(const p of valid.players)w.players.set(p.token,p.character);return {world:w,localToken:valid.localToken};}
+    serialize(localToken){return {game:'The Fred Verse',version:2,worldId:this.worldId,encounters:this.encounters,localToken,
+      players:[...this.players].map(([token,character])=>({token,character:clone(character)}))};}
+    join(token,name,variant){
+      if(typeof name!=='string'||!name.trim()||name.length>24||!['Dorm Fred','MLB Fred'].includes(variant))throw Error('Choose a Fred variant and a name of 1–24 characters.');
+      const existing=this.players.get(token),online=[...this.players.values()].filter(p=>p.online).length;
+      if((!existing||!existing.online)&&online>=4)throw Error('Campus is full (four Freds, including the host).');
+      if(existing){if(!existing.online){Object.assign(existing,{zone:'alpha',x:440,y:520,ready:false});}Object.assign(existing,{online:true,seen:this.clock,input:{}});return token;}
+      if(this.players.size>=100)throw Error('World character limit reached. Export a backup and start another world.');
+      token=id();const p=fresh(name.trim(),variant);Object.assign(p,{online:true,seen:this.clock});this.players.set(token,p);this.dirty=true;return token;
+    }
+    disconnect(token){const p=this.players.get(token);if(p)Object.assign(p,{online:false,ready:false,input:{}});this.dirty=true;}
+    stats(p){const items=Object.values(p.equipped).map(g=>GEAR[g]);return {defense:items.reduce((s,g)=>s+g.defense,0)+p.upgrade,
+      power:items.reduce((s,g)=>s+(g.power||0),0)+p.upgrade*2+p.level*2,set:items.filter(g=>g.set==='space').length>=2};}
+    snapshot(token){const p=this.players.get(token);if(!p)throw Error('Enter campus first.');
+      const fields=['name','variant','zone','x','y','hp','focus','level','weapon','equipped','angle','swing','invuln','shield','title','revive','ready'];
+      const boss=this.boss?Object.fromEntries(Object.entries(this.boss).filter(([k])=>k!=='participants')):null;
+      const self={...p,stats:this.stats(p)};delete self.input;delete self.seen;
+      return clone({self,players:[...this.players].filter(([,q])=>q.online).map(([t,q])=>({id:t.slice(0,8),...Object.fromEntries(fields.map(k=>[k,q[k]]))})),boss,
+        projectiles:this.projectiles,effects:this.effects,clock:this.clock,save_error:null});
+    }
+    input(token,data){const p=this.players.get(token);if(!p||!p.online)throw Error('Fred is disconnected. Rejoin the host.');
+      if(!data||typeof data!=='object'||Array.isArray(data)||!Array.isArray(data.keys)||data.keys.length>12||!data.keys.every(k=>typeof k==='string'&&k.length<=12)||!Number.isFinite(data.angle))throw Error('Invalid controls.');
+      p.input={keys:data.keys,attack:data.attack===true,block:data.block===true};p.angle=data.angle%(2*Math.PI);p.seen=this.clock;
+      if(data.action!==undefined){if(typeof data.action!=='string'||data.action.length>20||!(data.value===undefined||typeof data.value==='string'))throw Error('Invalid action.');this.action(token,data.action,data.value);}
+    }
+    action(token,action,value){const p=this.players.get(token);if(!p)return;
+      if(action==='rest'&&p.zone==='alpha'&&dist(p,{x:440,y:520})<140){
+        if(this.boss?.participants.includes(token)){p.notice='Finish the practice before resting.';return;}
+        Object.assign(p,{hp:100,focus:100,chips:3,ammo:8});p.notice='Well rested—for once. Chips and darts restocked.';
+      }else if(action==='recover'&&p.hp<=0){
+        if(this.boss?.participants.includes(token)){p.notice='Hold on for a teammate revive, or wait for the practice to reset.';return;}
+        Object.assign(p,{zone:'alpha',x:440,y:520,hp:100,focus:100,chips:3});
+      }else if(p.hp<=0)return;
+      else if(action==='weapon'&&Object.hasOwn(WEAPONS,value))p.weapon=value;
+      else if(action==='equip'&&p.gear.includes(value))p.equipped[GEAR[value].slot]=value;
+      else if(action==='upgrade'){
+        if(p.zone!=='alpha')p.notice='Upgrade at the Alpha workbench.';
+        else if(p.materials>=3&&p.upgrade<5){p.materials-=3;p.upgrade++;p.notice='Workbench upgrade: +2 power, +1 defense. Ready for the next chapter.';}
+        else p.notice='Upgrade needs three practice materials. Maximum tier: five.';
+      }else if(action==='title'&&p.titles.includes(value))p.title=value;
+      else if(action==='interact')this.interact(token);
+      else if(action==='reload'&&p.ammo<8&&p.reload<=0)p.reload=1.3;
+      else if(action==='heal'&&p.chips>0&&p.heal_cd<=0&&p.hp<100){p.hp=Math.min(100,p.hp+38);p.chips--;p.heal_cd=3;this.fx(p,'heal',45,.6);}
+      else if(action==='dodge'&&p.dodge_cd<=0&&p.focus>=12){p.focus-=12;p.dodge_cd=1.8;p.invuln=.28;for(let i=0;i<12;i++)this.move(p,Math.cos(p.angle)*10,Math.sin(p.angle)*10);this.fx(p,'dodge',25,.28);}
+      else if(action==='space'&&p.ability_cd<=0&&p.focus>=25){p.focus-=25;p.ability_cd=6;this.fx(p,'space',170,.7);
+        for(const q of this.players.values())if(q.online&&q.zone===p.zone&&dist(p,q)<170){q.shield=Math.max(q.shield,p.variant==='Dorm Fred'?3:2);q.focus=Math.min(100,q.focus+8);}
+        if(this.boss&&p.zone==='gym'&&dist(p,this.boss)<170)this.hit(this.boss,18+this.stats(p).power);
+      }
+      this.dirty=true;
+    }
+    interact(token){const p=this.players.get(token);
+      if(p.zone==='campus'){
+        for(const [id,name,x,y,w,h] of BUILDINGS)if(dist(p,{x:x+w/2,y:y+h+35})<100){
+          if(['alpha','gym','chapel'].includes(id)){
+            if(id==='gym'&&this.boss&&!this.boss.participants.includes(token)){p.notice='Practice underway. Join the next round.';return;}
+            const [zw,zh]=ZONES[id];Object.assign(p,{zone:id,x:zw/2,y:zh-65});
+          }else p.notice=name+': interior reserved for a later chapter.';return;
+        }
+      }else{
+        const [w,h]=ZONES[p.zone];if(dist(p,{x:w/2,y:h-35})<90){
+          if(p.zone==='gym'&&this.boss?.participants.includes(token)){p.notice='Finish the practice or recover after defeat before leaving.';return;}
+          const b=BUILDINGS.find(b=>b[0]===p.zone);Object.assign(p,{zone:'campus',x:b[2]+b[4]/2,y:b[3]+b[5]+45,ready:false});return;
+        }
+        if(p.zone==='alpha'){
+          if(p.quest===0&&dist(p,{x:700,y:230})<135){p.quest=1;p.xp+=20;p.level=1+Math.floor(p.xp/120);p.notice='Remote recovered. Leave it safe in Alpha. Meet Robbie Phillips at Darling Pavilion for Three-Point Practice.';}
+          else if(dist(p,{x:440,y:520})<140)this.action(token,'rest');
+          else p.notice='Fred mumbles: “My bed. My remote. Clear boundaries.”';
+        }else if(p.zone==='gym'&&dist(p,{x:680,y:300})<175&&!this.boss){
+          if(p.quest===0)p.notice='Recover the remote in Alpha first. Preparation counts.';
+          else{p.ready=true;this.startBoss();}
+        }else if(p.zone==='chapel'){
+          if(dist(p,{x:570,y:225})>150)p.notice='The President is waiting at the front of the auditorium. Follow the center aisle north.';
+          else if(p.quest===2&&p.upgrade>0&&p.chapter===0){p.chapter=1;p.xp+=35;p.level=1+Math.floor(p.xp/120);p.titles.push('Prepared for Convocation');p.title='Prepared for Convocation';p.notice='CHAPTER COMPLETE · +35 XP · Prepared for Convocation. Big P — The President: “Good preparation, Fred. We will meet again.” Fictional dialogue; the culminating challenge is a later chapter.';}
+          else p.notice='Big P — The President: “Prepare well, Fred. Complete the gym practice and improve your gear, then come see me.” Fictional dialogue.';
+        }
+      }
+    }
+    startBoss(){const members=[...this.players].filter(([,p])=>p.online&&p.zone==='gym'&&p.hp>0).map(([t])=>t);if(!members.length)return;
+      if(!members.every(t=>this.players.get(t).ready)){for(const t of members)this.players.get(t).notice='Ready check: every living Fred in the gym must approach the marker and press E.';return;}
+      this.encounters++;const hp=260+145*(members.length-1);this.boss={name:'Robbie Phillips · Three-Point Practice',x:680,y:300,hp,max_hp:hp,participants:members,encounter:this.encounters,age:0,next:1.8,hazards:[],phase:1};
+      for(const t of members)this.players.get(t).notice='Fictional, nonlethal faculty practice. Dodge the red floor marks. Attack between patterns.';this.dirty=true;
+    }
+    fx(p,kind,r,ttl){this.effects.push({x:p.x,y:p.y,zone:p.zone,kind,r,ttl});}
+    hit(b,amount){if(b!==this.boss)return;b.hp=Math.max(0,b.hp-amount);
+      if(b.hp===0){for(const t of b.participants){const p=this.players.get(t);p.wins++;p.xp+=90;p.level=1+Math.floor(p.xp/120);p.materials+=3;p.quest=2;p.ready=false;
+          if(!p.gear.includes('chain'))p.gear.push('chain');if(!p.titles.includes('An Hour Early')){p.titles.push('An Hour Early');p.title='An Hour Early';}
+          p.notice='Practice complete! +90 XP, +3 materials, Chain of Personal Space. Upgrade at Alpha, then visit Big P in Pacific Auditorium.';}
+        this.boss=null;this.projectiles=[];this.dirty=true;}
+    }
+    move(p,dx,dy){if(!solid(p.zone,p.x+dx,p.y))p.x+=dx;if(!solid(p.zone,p.x,p.y+dy))p.y+=dy;}
+    tick(dt){if(!Number.isFinite(dt)||dt<=0||dt>.1)throw Error('Invalid simulation step.');this.clock+=dt;
+      for(const [token,p] of this.players){if(this.clock-p.seen>5){p.online=false;p.input={};}if(!p.online)continue;
+        for(const cd of ['swing','invuln','shield','attack_cd','dodge_cd','heal_cd','ability_cd'])p[cd]=Math.max(0,p[cd]-dt);
+        if(p.reload>0){p.reload-=dt;if(p.reload<=0)p.ammo=8;}
+        const live=this.clock-p.seen<.5,keys=live?(p.input.keys||[]):[];
+        if(p.hp<=0){p.revive=0;
+          for(const q of this.players.values()){
+            const qkeys=q.input.keys||[],stationary=!qkeys.some(k=>['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(k));
+            if(q!==p&&q.online&&q.hp>0&&q.invuln<=0&&!q.input.attack&&stationary&&q.zone===p.zone&&dist(p,q)<85&&qkeys.includes('e')&&this.clock-q.seen<.5){p.revive=p.revive_time+dt;break;}
+          }
+          p.revive_time=p.revive;if(p.revive>=2.5){Object.assign(p,{hp:45,invuln:2,revive:0,revive_time:0});this.dirty=true;}continue;
+        }
+        p.focus=Math.min(100,p.focus+dt*6);
+        const dx=Number(keys.includes('d')||keys.includes('ArrowRight'))-Number(keys.includes('a')||keys.includes('ArrowLeft')),
+          dy=Number(keys.includes('s')||keys.includes('ArrowDown'))-Number(keys.includes('w')||keys.includes('ArrowUp')),len=Math.hypot(dx,dy)||1,speed=p.input.block&&live?85:175;
+        this.move(p,dx/len*speed*dt,dy/len*speed*dt);
+        if(p.input.attack&&live&&p.attack_cd<=0){
+          const w=WEAPONS[p.weapon];p.attack_cd=w.cooldown;p.swing=.22;
+          const bonus=this.stats(p).power+(p.variant==='MLB Fred'&&p.weapon==='bat'?5:0);
+          if(p.weapon==='nerf'){if(p.ammo>0&&p.reload<=0){p.ammo--;this.projectiles.push({x:p.x,y:p.y,zone:p.zone,angle:p.angle,life:.8,damage:w.damage+bonus});}}
+          else if(this.boss&&p.zone==='gym'&&dist(p,this.boss)<w.range){const a=Math.atan2(this.boss.y-p.y,this.boss.x-p.x),arc=Math.abs(((a-p.angle+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI);if(arc<(p.weapon==='bat'?1.4:1))this.hit(this.boss,w.damage+bonus);}
+        }
+      }
+      for(const d of [...this.projectiles]){d.x+=Math.cos(d.angle)*590*dt;d.y+=Math.sin(d.angle)*590*dt;d.life-=dt;if(solid(d.zone,d.x,d.y))d.life=0;
+        if(d.life>0&&this.boss&&d.zone==='gym'&&dist(d,this.boss)<34){this.hit(this.boss,d.damage);d.life=0;}}
+      this.projectiles=this.projectiles.filter(d=>d.life>0);for(const fx of this.effects)fx.ttl-=dt;this.effects=this.effects.filter(e=>e.ttl>0).slice(-100);
+      const b=this.boss;if(!b)return;const active=b.participants.map(t=>this.players.get(t)).filter(p=>p.online&&p.zone==='gym'&&p.hp>0);
+      if(!active.length){for(const t of b.participants){const p=this.players.get(t);p.ready=false;p.notice='Practice reset. Recover at Alpha, prepare, and try again. Gear retained.';}this.boss=null;this.projectiles=[];this.dirty=true;return;}
+      b.age+=dt;b.phase=1+Number(b.hp<b.max_hp*.65)+Number(b.hp<b.max_hp*.3);
+      if(b.age>=b.next){const target=active[Math.floor(b.age)%active.length],count=Math.min(active.length,b.phase===1?2:3);
+        for(const q of count===1?[target]:active.slice(0,count))b.hazards.push({x:q.x,y:q.y,r:70+10*b.phase,time:1.05,fired:false});
+        if(b.phase>=2)b.hazards.push({x:680,y:500,r:125,time:1.5,fired:false});b.next=b.age+2.7-.4*b.phase;
+      }
+      for(const h of b.hazards){h.time-=dt;if(h.time<=0&&!h.fired){h.fired=true;for(const q of active)if(dist(q,h)<h.r&&q.invuln<=0){let damage=Math.max(4,24-this.stats(q).defense);if(q.shield>0)damage*=.35;
+            if(q.input.block&&this.clock-q.seen<.5){damage*=.45;if(this.stats(q).set)q.shield=2;}q.hp=Math.max(0,q.hp-damage);q.invuln=.35;this.dirty=true;}}}
+      b.hazards=b.hazards.filter(h=>h.time>-.3);
+    }
+  }
+  globalThis.FredCore={World,WEAPONS,GEAR,BUILDINGS,ZONES,OBSTACLES,solid,dist,id,validateSave};
+})();
+
+</script>
+<script>
+/* Browser saves + manual WebRTC signaling. No relay, discovery server or external requests. */
+(() => {
+  'use strict';
+  const {World,id,validateSave}=FredCore, SAVE_KEY='fredverse.browser.v2', GUEST_KEY='fredverse.guests.v2';
+  function codeEncode(data){const bytes=new TextEncoder().encode(JSON.stringify(data));return 'FREDVERSE2.'+btoa(Array.from(bytes,b=>String.fromCharCode(b)).join(''));}
+  function codeDecode(value,type){
+    if(typeof value!=='string'||value.length>150000||!value.trim().startsWith('FREDVERSE2.'))throw Error('Paste a complete Fred Verse connection code.');
+    let data;try{data=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(value.trim().slice(11)),c=>c.charCodeAt(0))));}catch{throw Error('The connection code is damaged or incomplete.');}
+    if(data?.v!==2||data.type!==type||typeof data.id!=='string'||!/^[a-f0-9]{48}$/.test(data.id)||typeof data.worldId!=='string'||!/^[a-f0-9]{48}$/.test(data.worldId)||data.sdp?.type!==type||typeof data.sdp.sdp!=='string'||data.sdp.sdp.length>100000)throw Error('This is not a compatible '+type+' code.');
+    return data;
+  }
+  async function gather(pc){
+    const checkCandidates=()=>{if(!/a=candidate:/.test(pc.localDescription?.sdp||''))throw Error('No direct connection candidates are available. This browser or network may disable peer networking. Try a normal browser on the same LAN; solo still works.');};
+    if(pc.iceGatheringState==='complete'){checkCandidates();return;}
+    await new Promise((resolve,reject)=>{
+      const timer=setTimeout(()=>{cleanup();reject(Error('Local connection gathering timed out. Try again or use a supported browser on HTTPS.'));},8000);
+      const check=()=>{if(pc.iceGatheringState==='complete'){cleanup();resolve();}};
+      const cleanup=()=>{clearTimeout(timer);pc.removeEventListener('icegatheringstatechange',check);};
+      pc.addEventListener('icegatheringstatechange',check);check();
+    });
+    checkCandidates();
+  }
+  class Session{
+    constructor(){
+      this.world=null;this.localToken='';this.role='solo';this.peers=new Map();this.pending=new Map();this.saved=null;this.storageOK=true;this.saveError='';this.hasStoredData=false;
+      this.onstate=()=>{};this.onstatus=()=>{};this.peerState=null;this.paused=()=>false;this.guestKeys={};this.hostWorldId='';this.lastSaved=0;this.lastBroadcast=0;this.status='OFFLINE SOLO';
+      try{const raw=localStorage.getItem(SAVE_KEY);this.hasStoredData=!!raw;if(raw)this.saved=validateSave(JSON.parse(raw));const guests=JSON.parse(localStorage.getItem(GUEST_KEY)||'{}');if(guests&&typeof guests==='object'&&!Array.isArray(guests))this.guestKeys=guests;}
+      catch(error){this.saveError='Saved data could not be read: '+error.message+' You can import a backup or start a new game.';}
+      try{localStorage.setItem('fredverse.check','1');localStorage.removeItem('fredverse.check');}catch{this.storageOK=false;this.saveError='Browser storage is unavailable. Use Export Save before closing.';}
+      this.previous=performance.now();this.timer=setInterval(()=>this.tick(),1000/30);
+    }
+    setStatus(text){this.status=text;this.onstatus(text);}
+    newGame(name,variant){this.disconnectAll();this.world=new World();this.localToken=this.world.join('',name,variant);this.role='solo';this.peerState=null;this.setStatus('OFFLINE SOLO');this.persist();return this.localToken;}
+    continueGame(){if(!this.saved)throw Error('No browser save found. Import a backup or start a new game.');const loaded=World.load(this.saved);
+      this.disconnectAll();this.world=loaded.world;this.localToken=loaded.localToken;const p=this.world.players.get(this.localToken);this.world.join(this.localToken,p.name,p.variant);this.role='solo';this.peerState=null;this.setStatus('OFFLINE SOLO');return this.localToken;}
+    snapshot(){if(this.role==='guest'){if(!this.peerState)throw Error('Waiting for the host snapshot.');return this.peerState;}if(!this.world||!this.localToken)throw Error('Start a game first.');const s=this.world.snapshot(this.localToken);s.save_error=this.saveError||null;return s;}
+    input(data){if(this.role==='guest'){
+        const peer=this.peers.get('host');if(!peer?.ready||peer.channel.readyState!=='open')throw Error('Disconnected from host. Exchange fresh connection codes to rejoin.');this.send(peer,{type:'input',data});
+      }else if(this.world){const p=this.world.players.get(this.localToken);if(p&&!p.online)this.world.join(this.localToken,p.name,p.variant);this.world.input(this.localToken,data);if(this.world.dirty)this.persist();}}
+    tick(){const now=performance.now(),dt=Math.min(.1,(now-this.previous)/1000);this.previous=now;
+      if(this.role!=='guest'&&this.world){
+        const online=[...this.world.players.values()].filter(p=>p.online).length;
+        if(!(this.role==='solo'&&online<=1&&this.paused())){this.world.tick(Math.max(.001,dt));}
+        if(now-this.lastSaved>5000)this.persist();
+        if(now-this.lastBroadcast>70){this.lastBroadcast=now;for(const peer of this.peers.values())if(peer.ready&&peer.token){try{this.send(peer,{type:'state',state:this.world.snapshot(peer.token)});}catch(error){this.drop(peer,error.message);}}}
+      }
+      for(const [key,pending] of this.pending)if(now-pending.created>120000){pending.pc.close();this.pending.delete(key);}
+      for(const peer of this.peers.values())if(peer.deadline&&!peer.ready&&now>peer.deadline)this.drop(peer,'Connection timed out. Check the local network and exchange fresh codes.');
+    }
+    persist(){if(this.role==='guest'||!this.world||!this.localToken)return;
+      this.saved=this.world.serialize(this.localToken);this.hasStoredData=true;this.lastSaved=performance.now();this.world.dirty=false;
+      if(!this.storageOK)return;
+      try{localStorage.setItem(SAVE_KEY,JSON.stringify(this.saved));this.saveError='';}catch{this.storageOK=false;this.saveError='Save failed: browser storage unavailable/full. Export Save to keep your progress.';}
+    }
+    exportSave(){if(this.role==='guest')throw Error('The host owns this shared world. Ask the host to export its save. Your rejoin key stays in this browser.');this.persist();if(!this.saved)throw Error('Start a game or import a save first.');return JSON.stringify(this.saved,null,2);}
+    importSave(text){if(typeof text!=='string'||text.length>1024*1024)throw Error('Save must be a JSON file under 1 MB.');let data;try{data=JSON.parse(text);}catch{throw Error('This file is not valid JSON. Current progress was not changed.');}
+      const loaded=World.load(data); // Validate everything before disconnecting or replacing progress.
+      this.disconnectAll();this.role='solo';this.world=loaded.world;this.localToken=loaded.localToken;const p=this.world.players.get(this.localToken);this.world.join(this.localToken,p.name,p.variant);this.peerState=null;this.setStatus('OFFLINE SOLO');this.persist();return this.localToken;
+    }
+    rtc(){if(typeof RTCPeerConnection!=='function')throw Error('This browser cannot make WebRTC connections. Solo still works. Try current Chrome/Edge/Firefox on the HTTPS-hosted game.');return new RTCPeerConnection({iceServers:[]});}
+    send(peer,data){if(peer.channel.readyState!=='open')return;if(peer.channel.bufferedAmount>128000)return;peer.channel.send(JSON.stringify(data));}
+    wire(pc,channel,key,role,info={}){
+      const peer={pc,channel,key,role,ready:false,token:'',seq:-1,...info};this.peers.set(key,peer);
+      channel.onopen=()=>{if(role==='guest')this.send(peer,{type:'hello',name:peer.name,variant:peer.variant,token:this.guestKeys[peer.worldId]||''});};
+      channel.onmessage=event=>{
+        try{
+          if(typeof event.data!=='string'||event.data.length>64000)throw Error('Oversized or unsupported network message.');const msg=JSON.parse(event.data);
+          if(!msg||typeof msg!=='object'||Array.isArray(msg))throw Error('Invalid network message.');
+          if(role==='host'){
+            if(msg.type==='hello'&&!peer.ready){
+              const requested=typeof msg.token==='string'?msg.token:'';
+              if(requested===this.localToken||[...this.peers.values()].some(p=>p!==peer&&p.ready&&p.token===requested))throw Error('This Fred is already controlled by another connection.');
+              peer.token=this.world.join(requested,msg.name,msg.variant);peer.ready=true;
+              this.send(peer,{type:'welcome',token:peer.token,worldId:this.world.worldId});this.send(peer,{type:'state',state:this.world.snapshot(peer.token)});this.persist();this.setStatus('LAN HOST · '+[...this.peers.values()].filter(p=>p.ready).length+' GUEST(S)');
+            }else if(msg.type==='input'&&peer.ready){
+              if(!Number.isInteger(msg.seq)||msg.seq<=peer.seq)return;
+              const now=performance.now();if(now-(peer.rateStart||0)>1000){peer.rateStart=now;peer.rate=0;}if((peer.rate=(peer.rate||0)+1)>60)throw Error('Too many input messages.');
+              this.world.input(peer.token,msg.data);peer.seq=msg.seq;if(this.world.dirty)this.persist();
+            }else throw Error('Unexpected guest message.');
+          }else{
+            if(msg.type==='welcome'&&typeof msg.token==='string'&&/^[a-f0-9]{48}$/.test(msg.token)&&msg.worldId===peer.worldId){
+              peer.ready=true;this.localToken=msg.token;this.guestKeys[msg.worldId]=msg.token;
+              for(const [key,pending] of this.pending)if(pending.pc===pc)this.pending.delete(key);
+              try{localStorage.setItem(GUEST_KEY,JSON.stringify(this.guestKeys));}catch{this.storageOK=false;}
+              this.setStatus('LAN GUEST · CONNECTED');
+            }else if(msg.type==='state'&&peer.ready){
+              if(!msg.state?.self||!Array.isArray(msg.state.players)||msg.state.players.length>4||!Object.hasOwn(FredCore.ZONES,msg.state.self.zone))throw Error('Invalid host snapshot.');
+              this.peerState=msg.state;this.onstate(this.peerState);
+            }else if(msg.type==='error')throw Error(String(msg.error).slice(0,200));
+            else throw Error('Unexpected host message.');
+          }
+        }catch(error){if(role==='host')this.send(peer,{type:'error',error:error.message});this.drop(peer,error.message);}
+      };
+      channel.onclose=()=>this.drop(peer,'Connection closed. Generate a new invite/reply to rejoin.');
+      channel.onerror=()=>this.drop(peer,'Data channel failed. Try HTTPS and the same local network.');
+      pc.onconnectionstatechange=()=>{if(['failed','closed'].includes(pc.connectionState))this.drop(peer,'Connection '+pc.connectionState+'. Exchange fresh codes to rejoin.');};
+      return peer;
+    }
+    drop(peer,reason){if(this.peers.get(peer.key)!==peer)return;this.peers.delete(peer.key);peer.channel.onclose=null;peer.pc.onconnectionstatechange=null;peer.pc.close();
+      for(const [key,pending] of this.pending)if(pending.pc===peer.pc)this.pending.delete(key);
+      if(peer.role==='host'){this.world?.disconnect(peer.token);this.persist();this.setStatus('LAN HOST · '+reason);}
+      else{this.peerState=null;this.setStatus('DISCONNECTED · '+reason);}
+    }
+    async invite(){if(!this.world||this.role==='guest')throw Error('Start or continue a solo game before hosting.');
+      if([...this.world.players.values()].filter(p=>p.online).length+this.pending.size>=4)throw Error('Four-player capacity reached. Cancel unused invites first.');
+      this.role='host';const pc=this.rtc(),key=id(),channel=pc.createDataChannel('fred-verse-v2',{ordered:true}),peer=this.wire(pc,channel,key,'host');
+      this.pending.set(key,{pc,peer,created:performance.now()});
+      try{await pc.setLocalDescription(await pc.createOffer());await gather(pc);this.setStatus('LAN HOST · INVITE READY');return codeEncode({v:2,type:'offer',id:key,worldId:this.world.worldId,sdp:pc.localDescription.toJSON()});}
+      catch(error){this.pending.delete(key);this.drop(peer,error.message);if(!this.peers.size)this.role='solo';throw error;}
+    }
+    async answer(invite,name,variant){const data=codeDecode(invite,'offer');
+      if(typeof name!=='string'||!name.trim()||name.length>24||!['Dorm Fred','MLB Fred'].includes(variant))throw Error('Enter your name and select a Fred variant.');
+      const pc=this.rtc();this.persist();this.disconnectAll();this.role='guest';this.hostWorldId=data.worldId;this.peerState=null;
+      pc.ondatachannel=e=>this.wire(pc,e.channel,'host','guest',{name:name.trim(),variant,worldId:data.worldId});
+      // Track the pending connection before a data channel arrives, so cancellation closes it.
+      this.pending.set(data.id,{pc,created:performance.now()});
+      try{await pc.setRemoteDescription(data.sdp);await pc.setLocalDescription(await pc.createAnswer());await gather(pc);this.setStatus('LAN GUEST · SEND REPLY TO HOST');return codeEncode({v:2,type:'answer',id:data.id,worldId:data.worldId,sdp:pc.localDescription.toJSON()});}
+      catch(error){pc.close();this.pending.delete(data.id);this.role='solo';throw error;}
+    }
+    async accept(answer){const data=codeDecode(answer,'answer'),pending=this.pending.get(data.id);
+      if(this.role!=='host'||data.worldId!==this.world?.worldId||!pending)throw Error('This reply does not match an active invite. Generate a fresh invite for each guest.');
+      await pending.pc.setRemoteDescription(data.sdp);pending.peer.deadline=performance.now()+20000;this.pending.delete(data.id);this.setStatus('LAN HOST · CONNECTING');
+    }
+    disconnectAll(){for(const peer of [...this.peers.values()])this.drop(peer,'Session ended.');for(const p of this.pending.values())p.pc.close();this.pending.clear();}
+    leave(){if(this.role==='guest'){this.disconnectAll();this.role='solo';this.peerState=null;
+        if(this.world&&this.saved){const loaded=World.load(this.saved);this.world=loaded.world;this.localToken=loaded.localToken;const p=this.world.players.get(this.localToken);this.world.join(this.localToken,p.name,p.variant);}else{this.world=null;this.localToken='';}
+      }else{this.disconnectAll();this.role='solo';this.persist();}this.setStatus('OFFLINE SOLO');}
+  }
+  // Monotonic guest sequence numbers prevent replayed actions from duplicating rewards.
+  const send=Session.prototype.send;Session.prototype.send=function(peer,data){if(data.type==='input')data={...data,seq:peer.sentSeq=(peer.sentSeq??0)+1};return send.call(this,peer,data);};
+  globalThis.FredSession=Session;
+})();
+
+</script>
+<script>
+const $ = (id) => document.getElementById(id);
+const canvas = $('world'), ctx = canvas.getContext('2d');
+const pristineHTML='<!doctype html>\n'+document.documentElement.outerHTML;
+const session=new FredSession();
+const buildings = [
+  ['west', 'Nutwood West', 800, 180, 250, 160, 'A'], ['chapel', 'Pacific Auditorium', 1370, 170, 290, 185, 'B'],
+  ['library', 'Darling Library', 1080, 400, 240, 210, 'C'], ['east', 'Nutwood East', 1430, 640, 235, 165, 'D'],
+  ['gym', 'Darling Pavilion', 980, 930, 350, 240, 'E'], ['hub', 'Lawson-Fulton Center', 1000, 1260, 320, 190, 'F'],
+  ['omega', 'Omega Residence Hall', 280, 860, 300, 200, 'G'], ['alpha', 'Alpha Residence Hall', 280, 1440, 300, 220, 'H'],
+];
+const sizes = {campus:[1920,1920], alpha:[880,660], gym:[1360,1000], chapel:[1140,1100]};
+const zoneNames = {campus:'Hope International University', alpha:'Alpha Residence Hall', gym:'Darling Pavilion', chapel:'Pacific Auditorium'};
+const gear = {
+  hoodie:['Personal Space Hoodie','body',3,0,'Personal Space'], jersey:['MLB Prospect Jersey','body',1,4,'Royal Athletics'],
+  shoes:['Black Air Forces','shoes',2,0,'Personal Space'], chain:['Chain of Personal Space','accessory',2,0,'Personal Space'],
+};
+const weaponNames = {nerf:"Owen’s Sidearm", saber:"Owen’s Blue Blade", bat:'MLB Prospect'};
+let token = '', storageOK = session.storageOK;
+let state = null, keys = new Set(), attack = false, block = false, aim = -Math.PI/2;
+let pointerAim = false, camera = {x:0,y:0}, visual = new Map(), lastZone = '', notice = '', noticeUntil = 0;
+let atlas = null, busy = false, lastFrame = performance.now();
+let pixelScale=2,smoothCamera=true;
+let activeDialog = () => document.querySelector('dialog[open]');
+const actions = [];
+const staticScenes = new Map();
+const distance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
+function rect(c,x,y,w,h,color) { c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h)); }
+function polygon(c,points,color) { c.fillStyle=color;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fill(); }
+function text(c,value,x,y,size=10,color='#e6dec3',align='left') {c.fillStyle=color;c.font=`${size}px monospace`;c.textAlign=align;c.fillText(value,Math.round(x),Math.round(y));}
+function rng(seed) { return () => {seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}; }
+function line(c,x,y,x2,y2,color,width=1) { c.strokeStyle=color;c.lineWidth=width;c.beginPath();c.moveTo(x,y);c.lineTo(x2,y2);c.stroke(); }
+function tree(c,x,y,palm=false) {
+  rect(c,x+6,y+5,22,10,'#40553d');
+  if(palm) {
+    rect(c,x,y-50,7,58,'#78644c');for(let j=0;j<6;j++)rect(c,x,y-44+j*9,7,2,'#9d8864');
+    for(const [dx,dy] of [[-38,-4],[-25,-18],[0,-24],[23,-18],[38,-2],[-22,12],[21,12]]) {
+      line(c,x+3,y-49,x+dx,y-49+dy,'#475b3a',7);line(c,x+3,y-51,x+dx,y-51+dy,'#7c8b4e',3);
+    }
+  } else {
+    rect(c,x-3,y-35,8,43,'#66503f');
+    rect(c,x-21,y-53,40,30,'#334d3c');rect(c,x-29,y-45,55,26,'#426044');
+    rect(c,x-20,y-58,32,28,'#526b46');rect(c,x-23,y-44,25,19,'#627b4d');rect(c,x-10,y-59,22,9,'#6d8451');
+    rect(c,x+10,y-40,12,15,'#3c573e');rect(c,x-18,y-47,6,5,'#80925c');
+  }
+}
+function bench(c,x,y){rect(c,x+4,y+12,56,9,'#6e7258');rect(c,x,y,56,6,'#9c8060');rect(c,x,y+8,56,5,'#b49a71');rect(c,x+6,y+13,4,8,'#354a43');rect(c,x+45,y+13,4,8,'#354a43');}
+function building(c,b) {
+  const [id,name,x,y,w,h,letter] = b;
+  rect(c,x+15,y+18,w+6,h+3,'#45553e');
+  rect(c,x,y,w,h,'#c3baa0');rect(c,x+6,y+8,w-12,h-18,'#a59f88');
+  // Glass curtain wall and two-storey columns, reflecting the campus's angular architecture.
+  rect(c,x+15,y+35,w-30,h-52,'#3e5d65');
+  for(let xx=x+19;xx<x+w-15;xx+=24){rect(c,xx,y+38,18,h-60,'#739595');rect(c,xx+1,y+40,3,h-64,'#8aa7a0');rect(c,xx+16,y+39,2,h-61,'#415e62');}
+  rect(c,x,y+h*.6,w,9,'#d7cdb0');rect(c,x,y+h*.6+9,w,3,'#53616a');
+  for(let xx=x+8;xx<x+w;xx+=56){rect(c,xx,y+22,8,h-22,'#d8d0b8');rect(c,xx+6,y+22,3,h-22,'#a89f87');}
+  if(id==='alpha'||id==='omega'){
+    for(let xx=x+25;xx<x+w-20;xx+=42){rect(c,xx,y+50,25,29,'#29494c');rect(c,xx,y+105,25,29,'#446769');rect(c,xx,y+105,2,29,'#a6b6a6');}
+    rect(c,x+5,y+83,w-10,8,'#d8d1b8');for(let xx=x+8;xx<x+w-5;xx+=6)rect(c,xx,y+74,1,9,'#4a5656');
+  }
+  polygon(c,[[x-12,y+32],[x+w*.5,y-18],[x+w+12,y+32],[x+w,y+47],[x+w*.5,y+1],[x,y+47]],'#eee2bd');
+  line(c,x-12,y+32,x+w*.5,y-18,'#fff3cf',3);line(c,x+w*.5,y-18,x+w+12,y+32,'#b5ac90',3);
+  if(id==='chapel'||id==='library'){
+    polygon(c,[[x+w*.25,y+19],[x+w*.5,y-40],[x+w*.75,y+19]],'#e4d8b6');
+    polygon(c,[[x+w*.32,y+19],[x+w*.5,y-24],[x+w*.68,y+19]],'#738c88');
+  }
+  const doorX=x+w/2;
+  rect(c,doorX-18,y+h-37,36,37,'#304a50');rect(c,doorX-16,y+h-34,30,29,'#6d9292');rect(c,doorX,y+h-34,2,33,'#c6c8ae');
+  for(let step=0;step<4;step++)rect(c,doorX-30-step*3,y+h+step*5,60+step*6,4,step%2?'#b1ad95':'#ccc4a8');
+  rect(c,x+9,y+h-29,26,20,'#253d4a');text(c,letter,x+22,y+h-14,12,'#d2bd76','center');
+  text(c,name,doorX,y+h+48,10,'#22392f','center');
+}
+function roomBase(c,w,h,color) {
+  rect(c,0,0,w,h,color);
+  const random=rng(84);
+  for(let i=0;i<w*h/60;i++){const x=random()*w,y=random()*h;rect(c,x,y,2,1,random()>.5?'#b2a48b':'#9b8d75');}
+  rect(c,0,0,w,35,'#d9d4bf');rect(c,0,35,w,6,'#8c8d7d');rect(c,0,0,15,h,'#d4d0bc');rect(c,w-15,0,15,h,'#acae9c');rect(c,0,h-15,w,15,'#c1bca7');
+  rect(c,w/2-32,h-22,64,22,'#3d5558');rect(c,w/2-27,h-17,54,17,'#617d78');text(c,'CAMPUS ↓',w/2,h-35,10,'#f0e3bc','center');
+}
+function bunk(c,x,y){
+  rect(c,x+6,y+9,175,190,'#655742');rect(c,x,y,175,190,'#ad8352');rect(c,x+9,y+10,157,167,'#e4dcc1');rect(c,x+17,y+45,140,116,'#344e69');
+  for(let k=0;k<8;k++)rect(c,x+20,y+48+k*14,134,2,'#536b7a');
+  rect(c,x+24,y+15,123,28,'#f1e9d5');rect(c,x+8,y+177,160,10,'#c99b5d');
+  for(const xx of [x,x+167]){rect(c,xx,y-8,8,205,'#c39658');rect(c,xx+2,y-8,2,204,'#e2b46e');}
+  rect(c,x+139,y+35,6,150,'#cca15f');rect(c,x+160,y+35,6,150,'#cca15f');for(let yy=y+44;yy<y+177;yy+=23)rect(c,x+139,yy,27,5,'#dbb57a');
+}
+function scene(zone){
+  if(staticScenes.has(zone))return staticScenes.get(zone);
+  const [w,h]=sizes[zone], scene=document.createElement('canvas');scene.width=w;scene.height=h;
+  const c=scene.getContext('2d');c.imageSmoothingEnabled=false;
+  if(zone==='campus'){
+    rect(c,0,0,w,h,'#7b8b55');const random=rng(720);
+    for(let i=0;i<15000;i++){let x=random()*w,y=random()*h;rect(c,x,y,random()*3+1,1,['#8b995e','#6e814d','#809356'][i%3]);}
+    rect(c,620,55,1180,65,'#74796d');rect(c,610,120,45,1700,'#d7ccb0');
+    rect(c,1800,55,65,1780,'#777c71');rect(c,610,1810,1250,60,'#777c71');
+    text(c,'NUTWOOD AVENUE',1200,96,14,'#d9dac8','center');
+    c.save();c.translate(1845,1000);c.rotate(Math.PI/2);text(c,'COMMONWEALTH AVENUE',0,0,14,'#d9dac8','center');c.restore();
+    text(c,'COLLEGE PLACE',1200,1848,14,'#d9dac8','center');
+    rect(c,655,122,52,1688,'#b7b299');rect(c,100,1745,1660,60,'#c8bfa3');
+    for(const b of buildings){const x=b[2]+b[4]/2,y=b[3]+b[5];rect(c,x-22,y,44,50,'#c8bfa3');rect(c,670,y+20,x-648,40,'#c8bfa3');}
+    rect(c,1140,320,44,610,'#c8bfa3');rect(c,1260,820,520,42,'#c8bfa3');
+    // East-side parking and Titan lot.
+    for(const [xx,yy,cols,rows] of [[1390,1020,7,6],[720,410,3,7]]){
+      rect(c,xx,yy,cols*42+12,rows*65,'#999c88');
+      for(let row=0;row<rows;row++)for(let col=0;col<cols;col++){
+        line(c,xx+col*42,yy+row*65,xx+col*42,yy+row*65+35,'#d5ccb1');
+        if(random()>.3){const cl=['#314b55','#c5b696','#a46d51','#687478'][col%4];rect(c,xx+col*42+8,yy+row*65+4,22,30,cl);rect(c,xx+col*42+10,yy+row*65+9,18,9,'#425b60');rect(c,xx+col*42+7,yy+row*65+8,2,8,'#263d3a');}
+      }
+    }
+    rect(c,285,1135,290,180,'#d3c6a3');rect(c,300,1150,260,150,'#4b919a');
+    for(let yy=1160;yy<1295;yy+=13)for(let xx=310;xx<550;xx+=24)rect(c,xx+(yy%3)*2,yy,16,2,'#78b3b1');
+    line(c,320,1225,540,1225,'#c7c19a',2);text(c,'POOL',430,1255,12,'#dbe7cc','center');
+    for(const b of buildings)building(c,b);
+    for(const [x,y] of [[180,1560],[150,1420],[190,1000],[175,800],[750,1540],[780,1350],[860,1210],[855,1050],[920,790],[1270,680],[1300,150],[1380,510],[1710,480],[1720,730],[1650,1480],[1430,1700],[900,1700]])tree(c,x,y,x%3===0);
+    for(const [x,y] of [[720,1680],[720,1360],[740,1000],[1330,850],[1160,720],[850,370],[1260,1640]]){
+      bench(c,x,y);rect(c,x-22,y-18,4,35,'#45534b');rect(c,x-25,y-23,10,9,'#dfd09b');
+    }
+    for(let yy=300;yy<1730;yy+=110){rect(c,590,yy,17,26,'#546a45');rect(c,590,yy,17,5,'#87905b');}
+    text(c,'TITAN DRIVE',680,220,11,'#394d3f','center');text(c,'PWCA PLAZA',855,1200,12,'#344c3d','center');
+  }else if(zone==='alpha'){
+    roomBase(c,w,h,'#a7987f');bunk(c,50,85);bunk(c,50,340);
+    // Mirrored closets, paneling, TV, study desk, luggage and under-bed shoes.
+    rect(c,640,80,170,80,'#d9d7c3');rect(c,647,87,74,64,'#95aaa4');rect(c,728,87,74,64,'#aec0b4');rect(c,670,104,30,45,'#536e6b');rect(c,750,90,3,60,'#e8e5cd');
+    rect(c,650,320,150,115,'#9c774b');rect(c,656,326,138,103,'#c49c64');rect(c,660,340,42,25,'#243a43');rect(c,668,344,24,15,'#668581');rect(c,730,332,24,30,'#c1baa1');rect(c,732,333,2,27,'#716b59');
+    rect(c,350,60,150,55,'#ac885a');rect(c,360,72,48,30,'#2c4248');rect(c,364,75,40,20,'#789b92');rect(c,414,80,45,25,'#d8c69b');rect(c,418,84,34,1,'#8a846b');rect(c,418,90,34,1,'#8a846b');rect(c,465,73,15,31,'#4b615c');
+    rect(c,685,169,77,43,'#1e3036');rect(c,690,173,66,32,'#456770');text(c,'MY TV',723,193,8,'#d6d6b7','center');
+    rect(c,682,190,70,18,'#c0aa78');rect(c,699,214,12,28,'#323d40');rect(c,702,218,6,4,'#bcaa7b');
+    rect(c,280,330,42,62,'#d4b349');rect(c,287,332,28,7,'#735d37');rect(c,290,381,7,7,'#343d35');rect(c,280,410,57,32,'#994e42');rect(c,282,417,53,5,'#b56651');
+    for(let k=0;k<6;k++){rect(c,245+k*7,170+k*8,6,11,'#273a3b');rect(c,245+k*7,178+k*8,6,3,'#bbc0ac');}
+    rect(c,520,390,26,30,'#a76643');rect(c,523,394,20,15,'#d5b262');text(c,'CHIPS',533,405,5,'#283d38','center');
+    rect(c,775,510,50,45,'#809085');for(let k=0;k<4;k++)rect(c,779+k*10,511,4,44,'#b6b9a0');
+    // Lived-in objects drawn from the supplied room photo, not claims of ownership.
+    for(let i=0;i<5;i++){rect(c,65+i*23,289,16,7,'#22373b');rect(c,66+i*23,295,15,2,'#9daca0');}
+    rect(c,246,450,7,95,'#30434a');rect(c,238,533,25,17,'#24383f');rect(c,242,481,16,32,'#425961');rect(c,242,482,3,30,'#7e9490');
+    for(let i=0;i<4;i++){rect(c,710+i*12,470,8,20,'#b9ccc0');rect(c,712+i*12,470,4,3,'#477e8d');rect(c,710+i*12,479,8,5,'#688b9b');}
+    rect(c,300,560,54,14,'#34454a');rect(c,305,550,36,7,'#6a7c70');rect(c,340,553,7,7,'#c4aa7c');
+    text(c,'ALPHA · SHARED ROOM / FICTIONAL ASSIGNMENT',w/2,27,11,'#4b5c50','center');
+    text(c,'REST & WORKBENCH',440,604,11,'#e9ddbd','center');text(c,'MIRRORED CLOSET',726,180,9,'#e5d9bc','center');
+    rect(c,408,528,64,6,'#817358');rect(c,414,534,52,33,'#bd9f69');rect(c,423,539,15,6,'#5c766a');
+  }else if(zone==='gym'){
+    roomBase(c,w,h,'#c2a36c');
+    for(let xx=16;xx<w-16;xx+=19){line(c,xx,42,xx,h-16,'#b29665');for(let yy=80+(xx%120);yy<h;yy+=140)line(c,xx,yy,xx+19,yy,'#a58b5e');}
+    for(const xx of [60,1200]){rect(c,xx,110,100,740,'#254758');for(let yy=118;yy<850;yy+=22)rect(c,xx+4,yy,92,3,'#557181');text(c,'HIU',xx+50,490,26,'#c3bba0','center');}
+    c.strokeStyle='#ede0bb';c.lineWidth=3;c.strokeRect(230,125,900,720);line(c,230,485,1130,485,'#ede0bb',3);
+    c.beginPath();c.arc(680,485,95,0,Math.PI*2);c.stroke();c.strokeRect(470,125,420,150);c.strokeRect(470,695,420,150);
+    for(const yy of [130,830]){rect(c,630,yy-7,100,6,'#e0ddc4');rect(c,666,yy,28,5,'#ab6f42');}
+    text(c,'HOPE',680,513,60,'#344f61','center');text(c,'ROYALS',680,544,15,'#eee0b7','center');
+    text(c,'THREE-POINT PRACTICE',680,220,14,'#3a5260','center');text(c,'ROBBIE PHILLIPS · FICTIONAL CHALLENGE',680,240,9,'#3a5260','center');
+    text(c,'APPROACH THE MARKER · E TO READY',680,372,10,'#3a5260','center');
+  }else{
+    roomBase(c,w,h,'#898779');rect(c,160,65,820,130,'#9f8862');rect(c,176,65,788,114,'#b39a6b');
+    rect(c,540,102,60,60,'#6a6050');rect(c,551,104,38,10,'#c6b78d');rect(c,370,97,70,42,'#1e3540');
+    for(const xx of [100,730])for(let yy=330;yy<900;yy+=85){rect(c,xx+3,yy+7,282,40,'#605f54');rect(c,xx,yy,280,40,'#3f5d6b');for(let sx=xx+5;sx<xx+275;sx+=30){rect(c,sx,yy+4,24,13,'#597b86');rect(c,sx,yy+22,24,14,'#4d6d7b');}}
+    text(c,'PACIFIC AUDITORIUM / GRANA CHAPEL',570,49,13,'#4c625b','center');text(c,'BIG P — THE PRESIDENT',570,260,15,'#e8d7a9','center');
+    text(c,'CONVOCATION IS A LATER CHAPTER',570,281,10,'#e0d9bd','center');
+    text(c,'THE PRESIDENT ↑',570,790,12,'#ded5b3','center');
+  }
+  staticScenes.set(zone,scene);return scene;
+}
+function fred(c,p,x,y,time=0,walking=false,scale=1){
+  c.save();c.translate(Math.round(x),Math.round(y));c.scale(scale,scale);
+  if(p.hp<=0)c.rotate(-Math.PI/2);
+  const bob=walking?Math.round(Math.sin(time*13)):0, stride=walking?Math.round(Math.sin(time*13)*3):0;
+  rect(c,-12,-2,25,6,'#233c344d');
+  if(atlas){
+    const fw=atlas.width/10,fh=fw*1.0625;
+    const a=(p.angle+Math.PI*2)%(Math.PI*2),row=a>Math.PI*.25&&a<Math.PI*.75?0:a>Math.PI*.75&&a<Math.PI*1.25?2:a>Math.PI*1.25&&a<Math.PI*1.75?4:2;
+    c.save();if(Math.cos(a)<0)c.scale(-1,1);c.drawImage(atlas,(walking?Math.floor(time*10)%8:0)*fw,row*fh,fw,fh,-20,-47,40,47);c.restore();
+  }else{
+    // Provisional original pixel likeness: glasses, slim silhouette, stubble, dark chain.
+    rect(c,-8,-16,7,14+stride,'#202e32');rect(c,2,-16,7,14-stride,'#29363a');
+    rect(c,-10,-4+stride,10,5,'#16282b');rect(c,1,-4-stride,11,5,'#16282b');rect(c,-9,-1+stride,8,1,'#84928a');rect(c,2,-1-stride,9,1,'#84928a');
+    const shirt=p.equipped?.body==='jersey'?'#a64f43':'#273238';
+    rect(c,-10,-32+bob,20,19,shirt);rect(c,-8,-29+bob,2,13,'#3b4548');rect(c,7,-29+bob,2,13,'#172a2d');
+    rect(c,-13,-29+bob,4,12,'#c39872');rect(c,10,-29+bob,4,12,'#b88a67');rect(c,-13,-30+bob,4,6,shirt);rect(c,10,-30+bob,4,6,shirt);
+    if(p.equipped?.body==='jersey'){rect(c,-1,-30+bob,2,14,'#e2cfac');text(c,'A',0,-20+bob,7,'#e2cfac','center');}
+    else {rect(c,-4,-30+bob,1,5,'#75817d');rect(c,3,-30+bob,1,5,'#75817d');rect(c,-3,-25+bob,6,1,'#75817d');}
+    rect(c,-4,-35+bob,8,5,'#be916d');rect(c,-9,-48+bob,18,16,'#cda37c');rect(c,7,-44+bob,3,10,'#b68c69');
+    rect(c,-10,-49+bob,20,5,'#6b503a');rect(c,-8,-52+bob,15,4,'#7e5c40');rect(c,-11,-46+bob,4,8,'#6b503a');rect(c,-6,-48+bob,5,5,'#8c6748');
+    rect(c,-8,-42+bob,7,5,'#243437');rect(c,1,-42+bob,7,5,'#243437');rect(c,-1,-41+bob,3,1,'#243437');rect(c,-6,-41+bob,3,2,'#aec0b3');rect(c,3,-41+bob,3,2,'#aec0b3');
+    rect(c,-4,-33+bob,9,2,'#786251');rect(c,-2,-35+bob,4,1,'#9b7359');rect(c,0,-38+bob,2,2,'#b0805f');
+    if(p.equipped?.accessory==='chain'){rect(c,-5,-29+bob,1,6,'#a8b3a0');rect(c,4,-29+bob,1,6,'#a8b3a0');rect(c,-4,-23+bob,8,2,'#a8b3a0');}
+  }
+  if(p.hp<=0){rect(c,-18,-10,36,9,'#9a7b61');text(c,'Z z',0,-26,9,'#e5d7ae','center');}
+  else{
+    c.save();c.translate(8,-22);c.rotate(p.angle+(p.swing>0?Math.sin(p.swing*20)*.8:0));
+    if(p.weapon==='nerf'){rect(c,0,-3,17,6,'#ce8749');rect(c,13,-3,7,5,'#8bb3b0');rect(c,0,3,5,5,'#476371');}
+    if(p.weapon==='saber'){rect(c,0,-2,9,4,'#849a9c');rect(c,9,-3,26,6,'#4697b077');rect(c,9,-1,26,2,'#c8f3f4');}
+    if(p.weapon==='bat'){rect(c,0,-1,10,3,'#a78050');rect(c,9,-3,22,6,'#ccaa70');rect(c,28,-2,4,4,'#dfc18b');}
+    c.restore();
+  }
+  c.restore();
+}
+function resize(){canvas.width=Math.ceil(canvas.clientWidth/pixelScale);canvas.height=Math.ceil(canvas.clientHeight/pixelScale);ctx.imageSmoothingEnabled=false;}
+new ResizeObserver(resize).observe(canvas);
+function paint(now){
+  const dt=Math.min(.1,(now-lastFrame)/1000);lastFrame=now;
+  const p=state?.self||{zone:'alpha',x:440,y:470}, zone=p.zone, [w,h]=sizes[zone];
+  if(lastZone!==zone){camera={x:p.x-canvas.width/2,y:p.y-canvas.height/2};visual.clear();lastZone=zone;}
+  camera.x+=(p.x-canvas.width/2-camera.x)*(smoothCamera?Math.min(1,dt*9):1);camera.y+=(p.y-canvas.height/2-camera.y)*(smoothCamera?Math.min(1,dt*9):1);
+  const cx=Math.round(Math.max(0,Math.min(w-canvas.width,camera.x))),cy=Math.round(Math.max(0,Math.min(h-canvas.height,camera.y)));
+  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.save();ctx.translate(-cx,-cy);ctx.drawImage(scene(zone),0,0);
+  const time=state?.clock||now/1000;
+  if(zone==='gym'&&!state?.boss){
+    rect(ctx,662,275,36,36,'#314f5b');text(ctx,'E',680,300,19,'#e3c77e','center');
+    fred(ctx,{equipped:{body:'hoodie'},weapon:'bat',angle:Math.PI/2,hp:100},680,300,time,false,1.2);
+  }
+  if(zone==='chapel'){fred(ctx,{equipped:{body:'hoodie'},weapon:'',angle:Math.PI/2,hp:100},570,225,time,false,1.2);text(ctx,'BIG P — THE PRESIDENT',570,174,10,'#ece0bd','center');}
+  if(zone==='alpha'&&(!state||p.quest===0)){rect(ctx,697,210,18,32,'#ead19d55');text(ctx,'!',706,200,14,'#f1d28e','center');}
+  const boss=state?.boss;
+  if(boss&&zone==='gym'){
+    for(const mark of boss.hazards){
+      ctx.strokeStyle=mark.fired?'#f1ac79':'#c26b54';ctx.lineWidth=mark.fired?5:2;ctx.fillStyle=mark.fired?'#df8f6466':'#a9554433';ctx.beginPath();ctx.arc(mark.x,mark.y,mark.r,0,Math.PI*2);ctx.fill();ctx.stroke();
+      line(ctx,mark.x-8,mark.y,mark.x+8,mark.y,'#d59676');line(ctx,mark.x,mark.y-8,mark.x,mark.y+8,'#d59676');text(ctx,mark.fired?'!':Math.max(0,mark.time).toFixed(1),mark.x,mark.y-15,10,'#ffe2ba','center');
+    }
+    fred(ctx,{hp:100,weapon:'',angle:Math.PI/2,equipped:{body:'jersey'}},boss.x,boss.y,time,false,1.4);text(ctx,'ROBBIE PHILLIPS',boss.x,boss.y-78,11,'#f7e1b3','center');
+  }
+  for(const e of state?.effects||[])if(e.zone===zone){ctx.strokeStyle=e.kind==='heal'?'#e3d19b':'#a3d9bc';ctx.lineWidth=3;ctx.fillStyle='#6bbca626';ctx.beginPath();ctx.arc(e.x,e.y,e.r*(1-Math.min(e.ttl,.7)*.4),0,Math.PI*2);ctx.fill();ctx.stroke();}
+  for(const q of [...(state?.players||[])].filter(q=>q.zone===zone).sort((a,b)=>a.y-b.y)){
+    const v=visual.get(q.id)||{x:q.x,y:q.y};const walking=distance(v,q)>.5;
+    v.x+=(q.x-v.x)*Math.min(1,dt*16);v.y+=(q.y-v.y)*Math.min(1,dt*16);visual.set(q.id,v);
+    if(q.shield>0){ctx.strokeStyle='#8ed3bb';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(v.x,v.y-19,23,35,0,0,Math.PI*2);ctx.stroke();}
+    if(q.invuln<=0||Math.floor(now/60)%2)fred(ctx,q,v.x,v.y,time,walking);
+    rect(ctx,v.x-18,v.y-65,36,3,'#31483e');rect(ctx,v.x-18,v.y-65,36*q.hp/100,3,'#95c3a1');text(ctx,q.name,v.x,v.y-71,9,'#f5ecd1','center');
+    if(q.revive>0)text(ctx,`REVIVE ${q.revive.toFixed(1)}/2.5`,v.x,v.y+15,9,'#e0c57d','center');
+  }
+  for(const d of state?.projectiles||[])if(d.zone===zone){rect(ctx,d.x-3,d.y-2,7,3,'#f4d38c');rect(ctx,d.x-1,d.y-1,3,1,'#87c0bd');}
+  ctx.restore();
+  if(state&&notice&&now>noticeUntil){$('speech').textContent='';notice='';}
+  requestAnimationFrame(paint);
+}
+function showDialog(id){keys.clear();attack=block=false;if(!$(id).open)$(id).showModal();if(id==='inventory')renderInventory();if(id==='campus-map')renderMap();if(id==='game-menu'){$('pause-heading').textContent=session.role==='solo'?'Paused.':'Still on campus.';$('export-save').disabled=session.role==='guest';}}
+for(const [button,id] of [['help-open','guide'],['inventory-open','inventory'],['map-open','campus-map'],['lan-open','lan'],['sprite-open','sprite']])$(button).onclick=()=>showDialog(id);
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
+document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d&&d.id!=='welcome'){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
+document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>queue(b.dataset.action));
+document.querySelectorAll('[data-weapon]').forEach(b=>b.onclick=()=>queue('weapon',b.dataset.weapon));
+$('recover').onclick=()=>queue('recover');$('upgrade').onclick=()=>queue('upgrade');$('title-select').onchange=e=>queue('title',e.target.value);
+function queue(action,value){if(state&&actions.length<8){actions.push({action,value});send();}}
+async function request(path,body){
+  if(path==='/api/input'){session.input(body);return {ok:true};}
+  if(path==='/api/state')return session.snapshot();
+  throw Error('Unknown local command.');
+}
+function begin(){token=session.localToken;state=session.snapshot();$('welcome').close();$('continue-game').hidden=false;renderHUD();canvas.focus();}
+$('join-form').onsubmit=async(e)=>{
+  e.preventDefault();const button=e.submitter;button.disabled=true;
+  try{
+    if((session.saved||session.hasStoredData)&&!confirm('Replace your current local world with a new game? Export your save first if you want to keep it.'))return;
+    session.newGame($('name').value,new FormData(e.target).get('variant'));begin();
+  }catch(error){$('join-error').textContent=error.message;}finally{button.disabled=false;}
+};
+async function send(){
+  if(!state||busy)return;busy=true;
+  const modal=activeDialog(), action=actions.shift();
+  try{
+    await request('/api/input',{keys:modal?[]:[...keys],attack:!modal&&attack,block:!modal&&block,angle:aim,...action});
+    state=await request('/api/state');renderHUD();
+    $('connection').textContent=session.status;$('status-light').style.background='#73b6a5';
+  }catch(error){
+    $('connection').textContent='DISCONNECTED';$('status-light').style.background='#d48a6b';
+    $('speech').textContent=error.message+' Open Invite a Fred to exchange fresh codes. No offline combat is being simulated.';
+  }finally{busy=false;}
+}
+setInterval(send,80);
+function promptFor(p){
+  if(p.hp<=0)return '';
+  if(p.zone==='campus'){
+    const b=buildings.find(b=>distance(p,{x:b[2]+b[4]/2,y:b[3]+b[5]+35})<100);
+    return b?`${['alpha','gym','chapel'].includes(b[0])?'Enter':'Inspect'} ${b[1]}`:'';
+  }
+  const [w,h]=sizes[p.zone];if(distance(p,{x:w/2,y:h-35})<90)return 'Leave for campus';
+  if(p.zone==='alpha'){
+    if(p.quest===0&&distance(p,{x:700,y:230})<135)return 'Recover the remote';
+    if(distance(p,{x:440,y:520})<140)return 'Rest & restock';
+  }
+  if(p.zone==='gym'&&!state.boss&&distance(p,{x:680,y:300})<175)return 'Ready for Three-Point Practice';
+  if(p.zone==='chapel'&&distance(p,{x:570,y:225})<150)return 'Speak with The President';
+  return '';
+}
+function renderHUD(){
+  const p=state.self;
+  $('location').textContent=zoneNames[p.zone];$('area-note').textContent=p.zone==='gym'?'Prepare. Read the floor. Find your opening.':p.zone==='chapel'?'A quiet moment before the next chapter.':p.zone==='campus'?'A familiar place. A different kind of semester.':'A little preparation goes a long way.';
+  $('player-name').textContent=p.name;$('variant-name').textContent=p.variant.toUpperCase();$('player-title').textContent=p.title||'A new semester. Same Fred.';$('level').textContent=String(p.level).padStart(2,'0');
+  $('hp').value=p.hp;$('hp-text').textContent=`${Math.ceil(p.hp)} / 100`;$('focus').value=p.focus;$('focus-text').textContent=`${Math.floor(p.focus)} / 100`;$('xp').textContent=`${p.xp%120} / 120 XP TO NEXT LEVEL`;
+  const q=p.quest;
+  $('quest-title').textContent=p.chapter?'Prepared for convocation':q===0?'Personal boundaries':q===1?'An hour early':'Preparation pays off';
+  $('quest-description').textContent=p.chapter?'First chapter complete. A familiar campus has more stories to tell. Try another build or practice with friends.':q===0?'Find the remote beside the TV. Some things are not communal property.':q===1?'Bring your gear to Darling Pavilion. Robbie Phillips has a three-point practice challenge.':'Upgrade your gear at Alpha, then meet The President at Pacific Auditorium to finish the chapter.';
+  $('quest-step').querySelector('span').textContent=p.chapter?'Chapter 01 complete · practice remains replayable':q===0?'Recover the remote in Alpha':q===1?'Complete Three-Point Practice':p.upgrade?'Meet The President in the chapel':'Upgrade at the Alpha workbench';
+  for(const b of document.querySelectorAll('[data-weapon]'))b.classList.toggle('selected',b.dataset.weapon===p.weapon);
+  $('weapon-name').textContent=weaponNames[p.weapon];$('ammo').textContent=p.weapon==='nerf'?p.reload>0?`RELOADING · ${p.reload.toFixed(1)}s`:`${p.ammo} / 8 DARTS · R RELOAD`:p.weapon==='saber'?'QUICK SWINGS · MEDIUM REACH':'HEAVY SWINGS · WIDE ARC';
+  $('space-cd').textContent=p.ability_cd>0?p.ability_cd.toFixed(1):'25 F';$('heal-cd').textContent=p.heal_cd>0?p.heal_cd.toFixed(1):`×${p.chips}`;$('dodge-cd').textContent=p.dodge_cd>0?p.dodge_cd.toFixed(1):'12 F';
+  $('party-count').textContent=`${state.players.length} / 4`;
+  $('party-list').replaceChildren(...state.players.map(q=>{const row=document.createElement('div');row.className='party-row';const dot=document.createElement('i'),name=document.createElement('span'),status=document.createElement('small');name.textContent=q.name;status.textContent=q.hp<=0?'DOWNED':q.ready&&!state.boss?'READY':`${Math.ceil(q.hp)} HP · ${q.variant==='MLB Fred'?'MLB':'DORM'}`;row.append(dot,name,status);return row;}));
+  const boss=state.boss;$('boss-hud').hidden=!(boss&&p.zone==='gym');if(boss){$('boss-name').textContent='Three-Point Practice';$('boss-phase').textContent=`POINT ${boss.phase} / 3`;$('boss-health').max=boss.max_hp;$('boss-health').value=boss.hp;}
+  const prompt=promptFor(p);$('prompt').hidden=!prompt;$('prompt').querySelector('span').textContent=prompt;
+  $('downed').hidden=p.hp>0;$('recover').disabled=!!boss;$('downed-note').textContent=boss?'Hold on—a teammate can hold E nearby to revive you. All Freds down resets the practice.':'Practice reset. Return to Alpha with your equipment intact.';
+  if(p.notice!==notice&&p.notice!==$('speech').dataset.last){notice=p.notice;$('speech').textContent=notice;$('speech').dataset.last=notice;noticeUntil=performance.now()+10000;}
+  storageOK=session.storageOK;$('save-status').textContent=session.role==='guest'?'SAVED BY HOST':!storageOK?'MEMORY ONLY · EXPORT YOUR SAVE':state.save_error?'SAVE ERROR · EXPORT BACKUP':'SAVED IN THIS BROWSER';
+  const portrait=$('portrait').getContext('2d');portrait.clearRect(0,0,48,64);portrait.imageSmoothingEnabled=false;fred(portrait,p,24,59,0,false,1);
+  if($('inventory').open)renderInventory();if($('campus-map').open)renderMap();
+}
+function renderInventory(){
+  if(!state)return;const p=state.self;
+  $('gear-stats').textContent=`Defense ${p.stats.defense} · Power +${p.stats.power} · Upgrade tier ${p.upgrade}/5`;
+  $('materials').textContent=`${p.materials} practice materials. Upgrade at the Alpha workbench.`;
+  $('upgrade').disabled=p.materials<3||p.upgrade>=5||p.zone!=='alpha';
+  const ids=p.gear.join(',')+JSON.stringify(p.equipped);
+  if($('gear-list').dataset.items!==ids){
+    $('gear-list').dataset.items=ids;
+    $('gear-list').replaceChildren(...p.gear.map(id=>{
+      const g=gear[id],row=document.createElement('div');row.className='gear-row';const info=document.createElement('div'),name=document.createElement('b'),detail=document.createElement('small'),button=document.createElement('button');
+      name.textContent=g[0];detail.textContent=`${g[1]} · ${g[2]} DEF · +${g[3]} power · ${g[4]}`;info.append(name,detail);button.textContent=p.equipped[g[1]]===id?'Equipped':'Equip';button.disabled=p.equipped[g[1]]===id;button.onclick=()=>queue('equip',id);row.append(info,button);return row;
+    }));
+  }
+  const titles=p.titles.join('|');if($('title-select').dataset.items!==titles){$('title-select').dataset.items=titles;$('title-select').replaceChildren(...(p.titles.length?p.titles:['No titles yet']).map(t=>{const o=document.createElement('option');o.textContent=t;o.value=t;return o;}));}
+  $('title-select').value=p.title||'No titles yet';
+}
+function renderMap(){
+  const c=$('map').getContext('2d');c.imageSmoothingEnabled=false;c.drawImage(scene('campus'),0,0,560,560);const scale=560/1920;
+  const p=state?.self;let pos=p;
+  if(p&&p.zone!=='campus'){const b=buildings.find(b=>b[0]===p.zone);pos={x:b[2]+b[4]/2,y:b[3]+b[5]+35};}
+  for(const b of buildings){const x=(b[2]+b[4]/2)*scale,y=(b[3]+b[5]/2)*scale;rect(c,x-11,y-11,22,22,'#1a303be8');text(c,b[6],x,y+5,14,'#e6ce8d','center');}
+  if(pos){c.strokeStyle='#fff5c9';c.lineWidth=2;c.beginPath();c.arc(pos.x*scale,pos.y*scale,7,0,Math.PI*2);c.stroke();rect(c,pos.x*scale-2,pos.y*scale-2,4,4,'#fff5c9');}
+  let legend=$('map-legend');if(!legend){legend=document.createElement('p');legend.id='map-legend';legend.style.fontSize='10px';$('map').after(legend);legend.textContent=buildings.map(b=>`${b[6]} ${b[1]}`).join('  ·  ');}
+}
+const keyActions={' ':'dodge',q:'space',h:'heal',e:'interact',r:'reload'};
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&!activeDialog()&&state){e.preventDefault();showDialog('game-menu');return;}
+  if(activeDialog())return;
+  const key=e.key.length===1?e.key.toLowerCase():e.key;
+  if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))e.preventDefault();
+  keys.add(key);if(key==='j')attack=true;if(key==='k')block=true;
+  if(!pointerAim){const dx=Number(keys.has('d')||keys.has('ArrowRight'))-Number(keys.has('a')||keys.has('ArrowLeft')),dy=Number(keys.has('s')||keys.has('ArrowDown'))-Number(keys.has('w')||keys.has('ArrowUp'));if(dx||dy)aim=Math.atan2(dy,dx);}
+  if(e.repeat)return;
+  if(keyActions[key])queue(keyActions[key]);
+  if(['1','2','3'].includes(key))queue('weapon',['nerf','saber','bat'][Number(key)-1]);
+  if(key==='i')showDialog('inventory');if(key==='m')showDialog('campus-map');
+});
+window.addEventListener('keyup',e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;keys.delete(k);if(k==='j')attack=false;if(k==='k')block=false;});
+window.addEventListener('blur',()=>{keys.clear();attack=block=false;pointerAim=false;});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){keys.clear();attack=block=false;}});
+canvas.addEventListener('pointermove',e=>{
+  if(!state||e.pointerType==='touch')return;
+  pointerAim=true;const r=canvas.getBoundingClientRect(),p=state.self,[w,h]=sizes[p.zone];
+  const cx=Math.round(Math.max(0,Math.min(w-canvas.width,camera.x))),cy=Math.round(Math.max(0,Math.min(h-canvas.height,camera.y)));
+  aim=Math.atan2((e.clientY-r.top)/r.height*canvas.height+cy-p.y,(e.clientX-r.left)/r.width*canvas.width+cx-p.x);
+});
+canvas.addEventListener('pointerdown',e=>{if(activeDialog())return;canvas.focus();canvas.setPointerCapture(e.pointerId);if(e.button===0)attack=true;if(e.button===2)block=true;});
+window.addEventListener('pointerup',()=>{attack=block=false;});canvas.addEventListener('pointercancel',()=>{attack=block=false;});canvas.addEventListener('contextmenu',e=>e.preventDefault());
+for(const b of document.querySelectorAll('[data-key]')){
+  b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(b.dataset.key);pointerAim=false;const dirs={w:-Math.PI/2,a:Math.PI,s:Math.PI/2,d:0};aim=dirs[b.dataset.key];};
+  b.onpointerup=b.onpointercancel=()=>keys.delete(b.dataset.key);
+}
+for(const [id,type] of [['touch-attack','attack'],['touch-block','block']]){
+  $(id).onpointerdown=e=>{e.preventDefault();e.currentTarget.setPointerCapture(e.pointerId);if(type==='attack')attack=true;else block=true;};
+  $(id).onpointerup=$(id).onpointercancel=()=>{if(type==='attack')attack=false;else block=false;};
+}
+$('sprite-file').onchange=async(e)=>{
+  const f=e.target.files[0];if(!f)return;if(f.size>12*1024*1024){$('sprite-status').textContent='Choose a PNG or WebP under 12 MB.';return;}
+  const url=URL.createObjectURL(f),img=new Image();
+  img.onload=()=>{atlas=img;URL.revokeObjectURL(url);$('sprite-status').textContent='Local sprite preview loaded. Equipment overlays and action frames are not yet integrated.';};
+  img.onerror=()=>{URL.revokeObjectURL(url);$('sprite-status').textContent='Could not read this image. Use PNG or WebP.';};img.src=url;
+};
+session.paused=()=>!!activeDialog()||document.hidden;
+session.onstate=s=>{state=s;token=session.localToken;if($('welcome').open)$('welcome').close();renderHUD();};
+session.onstatus=text=>{$('connection').textContent=text;$('lan-status').textContent=text;};
+$('continue-game').hidden=!session.saved;
+$('welcome-storage').textContent=session.saveError||'Solo works offline. Co-op uses direct local browser connections.';
+$('continue-game').onclick=()=>{try{session.continueGame();begin();}catch(error){$('join-error').textContent=error.message;}};
+$('menu-open').onclick=$('brand-menu').onclick=()=>showDialog('game-menu');
+$('resume').onclick=()=>$('game-menu').close();
+$('new-game').onclick=()=>{$('game-menu').close();$('continue-game').hidden=!session.saved;showDialog('welcome');};
+$('touch-gear').onclick=()=>showDialog('inventory');
+$('welcome-lan').onclick=()=>showDialog('lan');
+$('pixel-scale').onchange=e=>{pixelScale=Number(e.target.value);resize();};
+$('smooth-camera').onchange=e=>smoothCamera=e.target.checked;
+function download(name,content,type){const url=URL.createObjectURL(new Blob([content],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('export-save').onclick=()=>{try{download('The-Fred-Verse-save.json',session.exportSave(),'application/json');$('menu-status').textContent='Save exported. Keep it private: it includes your world and guest rejoin keys.';}catch(error){$('menu-status').textContent=error.message;}};
+$('import-save').onclick=$('welcome-import').onclick=()=>$('import-file').click();
+$('import-file').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{
+    if(f.size>1024*1024)throw Error('Save file is too large (maximum 1 MB).');
+    const data=await f.text();FredCore.validateSave(JSON.parse(data));
+    if((session.saved||session.role==='guest')&&!confirm('Replace local progress and close existing connections with this imported world? Export a backup first.'))return;
+    session.importSave(data);$('game-menu').close();$('lan').close();begin();$('speech').textContent='Save imported at Alpha. Health and gear preserved.';
+  }catch(error){$('menu-status').textContent=error.message;$('join-error').textContent=error.message;$('welcome-storage').textContent=error.message;}
+  finally{e.target.value='';}
+};
+function downloadGame(){
+  if(globalThis.FRED_STANDALONE)download('The-Fred-Verse.html',pristineHTML,'text/html');
+  else{const a=document.createElement('a');a.href='../The-Fred-Verse.html';a.download='The-Fred-Verse.html';a.click();}
+}
+$('download-game').onclick=$('welcome-download').onclick=downloadGame;
+async function lanTask(button,task){button.disabled=true;try{await task();}catch(error){$('lan-status').textContent=error.message;}finally{button.disabled=false;}}
+$('create-invite').onclick=e=>lanTask(e.currentTarget,async()=>{$('invite-output').value=await session.invite();});
+$('create-reply').onclick=e=>lanTask(e.currentTarget,async()=>{
+  if(session.world&&session.role!=='guest'&&!confirm('Join your friend’s world? Your solo world will be saved first.'))return;
+  $('reply-output').value=await session.answer($('invite-input').value,$('guest-name').value,$('guest-variant').value);
+});
+$('accept-reply').onclick=e=>lanTask(e.currentTarget,()=>session.accept($('reply-input').value));
+$('leave-session').onclick=()=>{session.leave();$('invite-output').value=$('reply-output').value='';if(session.world)begin();else{state=null;showDialog('welcome');}};
+document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const source=$(b.dataset.copy);source.focus();source.select();try{await navigator.clipboard.writeText(source.value);$('lan-status').textContent='Code copied. Send the whole code privately.';}catch{$('lan-status').textContent='Code selected. Use Copy / Ctrl+C, then send it privately.';}});
+window.addEventListener('pagehide',()=>{session.persist();});
+resize();requestAnimationFrame(paint);$('welcome').showModal();
+
+</script>
+</body></html>
