@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#141e26"><title>The Fred Verse</title>
+  <link rel="stylesheet" href="style.css"><script type="module" src="game.js"></script>
+</head>
+<body>
+  <header>
+    <a class="brand" href="/" aria-label="The Fred Verse home"><span class="crest">F<span>V</span></span><span>THE FRED VERSE<small>HOPE INTERNATIONAL · FULLERTON</small></span></a>
+    <div class="session"><i id="status-light"></i><span id="connection">LOCAL CAMPUS</span><span class="version">ALPHA 0.1</span></div>
+    <button id="help-open" class="quiet">? <span>Field guide</span></button>
+  </header>
+  <main>
+    <section class="viewport" aria-label="Game world">
+      <canvas id="world" tabindex="0" aria-label="Campus game. Use WASD to move, E to interact. See Field guide for all controls."></canvas>
+      <div class="location"><span class="eyebrow">FULLERTON, CALIFORNIA</span><h1 id="location">Alpha Residence Hall</h1><span id="area-note">A little preparation goes a long way.</span></div>
+      <div id="boss-hud" hidden><div><b id="boss-name"></b><span id="boss-phase"></span></div><progress id="boss-health" max="100" value="100"></progress><small>FICTIONAL FACULTY PRACTICE · NONLETHAL</small></div>
+      <button id="map-open" class="map-button" title="Campus map (M)">⌖ <span>Campus map</span> <kbd>M</kbd></button>
+      <div id="speech" class="speech" aria-live="polite"></div>
+      <div id="prompt" class="prompt" hidden><kbd>E</kbd><span></span></div>
+      <div id="downed" hidden><h2>Five more minutes.</h2><p id="downed-note">Your equipment is safe.</p><button id="recover">Return to Alpha</button></div>
+      <div class="hotbar">
+        <button data-action="space" title="Personal Space (Q)"><kbd>Q</kbd><span>◎</span><small>Personal Space</small><em id="space-cd"></em></button>
+        <button data-action="heal" title="Emergency Chips (H)"><kbd>H</kbd><span>▱</span><small>Emergency Chips</small><em id="heal-cd"></em></button>
+        <button data-action="dodge" title="Dodge (Space)"><kbd>␣</kbd><span>»</span><small>Early to Class</small><em id="dodge-cd"></em></button>
+      </div>
+      <div class="touch-move" aria-label="Movement controls"><button data-key="w" aria-label="Move up">▲</button><div><button data-key="a" aria-label="Move left">◀</button><button data-key="s" aria-label="Move down">▼</button><button data-key="d" aria-label="Move right">▶</button></div></div>
+      <div class="touch-actions"><button id="touch-attack">Attack</button><button data-action="interact">Interact</button><button id="touch-block">Guard</button></div>
+      <span class="scene-caption">HIU-INSPIRED RECONSTRUCTION · APPROXIMATE INTERIORS</span>
+    </section>
+    <aside>
+      <section class="character"><div class="avatar"><canvas id="portrait" width="48" height="64"></canvas></div><div><span class="eyebrow" id="variant-name">DORM FRED</span><h2 id="player-name">Fred</h2><small id="player-title">A new semester. Same Fred.</small></div><span id="level" class="level">01</span></section>
+      <section class="vitals"><div><span>HEALTH</span><b id="hp-text">100 / 100</b></div><progress id="hp" max="100" value="100"></progress><div><span>FOCUS</span><b id="focus-text">100 / 100</b></div><progress id="focus" max="100" value="100"></progress><small id="xp">0 / 120 XP TO NEXT LEVEL</small></section>
+      <section class="quest"><div class="section-label">CAMPUS JOURNAL <span>01</span></div><h3 id="quest-title">Personal boundaries</h3><p id="quest-description">Find the remote beside the TV. Some things are not communal property.</p><div id="quest-step"><i></i><span>Recover the remote in Alpha</span></div></section>
+      <section class="loadout"><div class="section-label">THE LOADOUT <button id="inventory-open" class="text-button">Gear <kbd>I</kbd></button></div><div class="weapons"><button data-weapon="nerf"><kbd>1</kbd><span>⌁</span><b>Nerf</b></button><button data-weapon="saber"><kbd>2</kbd><span>╱</span><b>Saber</b></button><button data-weapon="bat"><kbd>3</kbd><span>╿</span><b>Bat</b></button></div><div class="weapon-detail"><span id="weapon-name">Owen’s Sidearm</span><small id="ammo">8 / 8 DARTS · R RELOAD</small></div></section>
+      <section class="party"><div class="section-label">FREDS ON CAMPUS <span id="party-count">1 / 4</span></div><div id="party-list"></div><button id="lan-open" class="lan-button">↗ Invite a Fred <span>LAN CO-OP</span></button></section>
+      <footer><span id="save-status">HOST-SAVED PROGRESS</span><button id="sprite-open" class="text-button">Sprite</button></footer>
+    </aside>
+  </main>
+  <dialog id="welcome" class="welcome">
+    <span class="eyebrow">A CAMPUS-SIZED ADVENTURE</span><h2>The Fred<br><span>Verse.</span></h2>
+    <p>Same campus. Different Freds.<br>Prepare at Alpha. Find your build. Take on the challenge.</p>
+    <form id="join-form"><label>YOUR NAME<input id="name" maxlength="24" value="Fred" required autocomplete="nickname"></label>
+      <fieldset><legend>CHOOSE YOUR FRED</legend><label class="variant-option"><input type="radio" name="variant" value="Dorm Fred" checked><strong>Dorm Fred</strong><small>Personal Space · longer party shield</small></label><label class="variant-option"><input type="radio" name="variant" value="MLB Fred"><strong>MLB Fred</strong><small>Walk-Off · stronger baseball swings</small></label></fieldset>
+      <button type="submit" class="primary">Enter campus <span>→</span></button><p id="join-error" role="alert"></p>
+    </form><small class="disclaimer">PLAYABLE PROTOTYPE · 1–4 FREDS · NO ACCOUNT NEEDED<br>Original fictional RPG. Not an official HIU game. Art and layouts are provisional.</small>
+  </dialog>
+  <dialog id="guide"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">KNOW YOUR CAMPUS</span><h2>The field guide</h2><p>Every player is a Fred. Everyone can complete this slice solo.</p><dl><dt>WASD / arrows</dt><dd>Move</dd><dt>Mouse / movement direction</dt><dd>Aim / touch aim</dd><dt>Left click / J</dt><dd>Attack (hold to repeat)</dd><dt>Right click / K</dt><dd>Guard; reduces incoming damage</dd><dt>Space · Q · H</dt><dd>Dodge · Personal Space · heal</dd><dt>1 / 2 / 3 · R</dt><dd>Nerf / saber / bat · reload</dd><dt>E / hold E</dt><dd>Interact / revive a downed Fred nearby</dd><dt>I · M</dt><dd>Equipment · campus map</dd></dl><p><b>First steps:</b> find the remote beside the dorm TV, exit south, and follow the map to Darling Pavilion. Approach the practice marker and press E. All Freds in the gym must be ready; solo starts immediately.</p><p>Red outlined circles are practice hazards. Teal circles help teammates. Guard or dodge telegraphs; your attacks never hurt another Fred. A downed Fred can be revived by a teammate holding E while still for 2.5 seconds. Solo defeat resets the practice so you can recover.</p><p class="muted">Royal Arts is a provisional name for fictional equipment abilities. Faith is not a stat; prayer and Scripture are not combat resources.</p></dialog>
+  <dialog id="inventory"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">STREETWEAR, WITH STATS</span><h2>The dorm wardrobe</h2><p id="gear-stats"></p><div id="gear-list"></div><p class="set-bonus">PERSONAL SPACE · 2 PIECES<br><small>Successful guards grant a brief shield. Helpful solo and together.</small></p><button id="upgrade" class="primary">Workbench upgrade · 3 materials</button><p id="materials"></p><label>DISPLAY TITLE<select id="title-select"></select></label></dialog>
+  <dialog id="campus-map"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">N ↑ · NOT TO SCALE</span><h2>Find your way.</h2><canvas id="map" width="560" height="560" aria-label="Campus map showing your position and labeled buildings"></canvas><p class="muted">Map-relative exterior. Alpha, gym, and chapel are enterable in this slice. Other interiors are reserved for later chapters.</p></dialog>
+  <dialog id="lan"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">BETTER WITH MORE FREDS</span><h2>Bring your variant.</h2><p>Run <code>python server.py</code> on one computer. Connect everyone to the same local network. On each device, open the host computer’s LAN IP with port 8000 in a browser.</p><p>Example address format: <code>http://192.168.x.x:8000</code>. Use your host’s actual address. Allow inbound TCP 8000 on its local firewall.</p><p>To find hosts from another computer with this project: <code>python server.py --discover</code>. UDP 47654 discovery can be blocked by guest Wi-Fi; direct address joining still works.</p><p>The host saves all characters. This browser stores a private rejoin key for this host address. Reuse the same browser and address to keep your Fred. No internet, accounts, or cloud services are required.</p></dialog>
+  <dialog id="sprite"><button class="close" data-close aria-label="Close">×</button><span class="eyebrow">ART WORK IN PROGRESS</span><h2>Fred, frame by frame.</h2><p>The built-in pixel Fred is a placeholder. To preview the sprite sheet you shared, choose its PNG file. It stays in this browser session and is not uploaded to the host.</p><label>SPRITE SHEET<input id="sprite-file" type="file" accept="image/png,image/webp"></label><p class="muted">Preview expects 10 columns; the first five directional rows have equal height. Full action animation and final atlas integration remain unfinished.</p><p id="sprite-status" role="status"></p></dialog>
+</body></html>
